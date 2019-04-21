@@ -1,0 +1,2 @@
+sudo docker build -t webpack .
+sudo docker run -v $(pwd):/react webpack npm install

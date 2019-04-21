@@ -1,0 +1,2 @@
+sudo rm -rf node_modules
+sudo docker rmi -f $(sudo docker images -q)
