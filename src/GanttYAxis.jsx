@@ -16,6 +16,7 @@ class GanttYAxis extends Component {
         for(let i = 1; i<this.numTicks; i++) {
             ticks.push(<div style={{left: this.getLeft(i),
                                     position: 'absolute'}}
+                            key={i}
                             className='ybar'></div>)
         }
         

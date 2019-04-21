@@ -11,13 +11,22 @@ class GanttXAxis extends Component {
         return (i>0) ? 1/this.numTicks*100 + '%' : 0
     }
 
+    roundScale(num) {
+        return Math.round(num*10)/10;
+    }
+
+    getCurrentScale(i) {
+        return this.roundScale(i*this.scale/this.numTicks);
+    }
+
     render() {
         let ticks = [];
 
         for(let i = 0; i<=this.numTicks; i++) {
             ticks.push(<div style={{paddingLeft: this.getMarginLeft(i)}}
-                            class='tick'>
-                        {i*this.scale/this.numTicks}
+                            key={i}
+                            className='tick'>
+                        {this.getCurrentScale(i)}
                       </div>)
         }
         
