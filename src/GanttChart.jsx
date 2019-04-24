@@ -27,9 +27,9 @@ class GanttChart extends Component {
 
     isValidBar(bar,index) {
         let validStart = this.isValidQuantity(bar.start, 'Bar ' + (index+1) + 
-            'start');
-        let validDuration = this.isValidQuantity(bar.start, 'Bar ' + (index+1) + 
-            'duration');
+            ' start');
+        let validDuration = this.isValidQuantity(bar.duration, 'Bar ' + (index+1) + 
+            ' duration');
         let validId = this.isIdValid(bar.id,'Bar ' + (index+1));
 
         return validStart && validDuration && validId;

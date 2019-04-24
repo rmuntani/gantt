@@ -191,6 +191,61 @@ describe('GanttChart.isDataValid', () => {
             expect(gc.errors).toContain('Number of ticks must be a positive number');
         })
 
+        it('when bar has no start', () => { 
+            let mockData = {
+                numTicks: 10,
+                scale: 100,
+                bars: [{ duration:20, id: 1 }]
+            };
 
+            let gc = new GanttChart({data: mockData});
+            expect(gc.isDataValid()).toEqual(false);
+            expect(gc.errors).toContain('Bar 1 start is necessary to draw the chart');
+        })
+        it('when bar has no duration', () => { 
+            let mockData = {
+                numTicks: 10,
+                scale: 100,
+                bars: [{ start:10, id: 1 }]
+            };
+
+            let gc = new GanttChart({data: mockData});
+            expect(gc.isDataValid()).toEqual(false);
+            expect(gc.errors).toContain('Bar 1 duration is necessary to draw the chart');
+        })
+
+        it('when start is negative', () => { 
+            let mockData = {
+                numTicks: 10,
+                scale: 100,
+                bars: [{ start:-10, duration:20, id:1 }]
+            };
+
+            let gc = new GanttChart({data: mockData});
+            expect(gc.isDataValid()).toEqual(false);
+            expect(gc.errors).toContain('Bar 1 start must be a positive number');
+        })
+        it('when duration is negative', () => { 
+            let mockData = {
+                numTicks: 10,
+                scale: 100,
+                bars: [{ start:10, duration:-20, id:1 }]
+            };
+
+            let gc = new GanttChart({data: mockData});
+            expect(gc.isDataValid()).toEqual(false);
+            expect(gc.errors).toContain('Bar 1 duration must be a positive number'); 
+        })
+        it('when id is not valid', () => { 
+            let mockData = {
+                numTicks: 10,
+                scale: 100,
+                bars: [{ start:10, duration:20 }]
+            };
+
+            let gc = new GanttChart({data: mockData});
+            expect(gc.isDataValid()).toEqual(false);
+            expect(gc.errors).toContain('Bar 1 id must be a number/string');
+         })
     })
 })
