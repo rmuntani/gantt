@@ -3,7 +3,6 @@ import GanttBar from './GanttBar.jsx'
 import GanttYAxis from './GanttYAxis.jsx'
 import GanttXAxis from './GanttXAxis.jsx'
 import * as helpers from './helpers.js'
-import { tsIndexSignature } from '@babel/types';
 
 class GanttChart extends Component {
     constructor(props) {

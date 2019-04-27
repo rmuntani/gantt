@@ -16,7 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "webpack",
-    "test": "jest --coverage || true",
+    "test": "jest -- -t",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
