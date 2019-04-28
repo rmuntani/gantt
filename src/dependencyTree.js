@@ -1,4 +1,4 @@
-class dependencyTree {
+class DependencyTree {
     constructor(value){
         this.node = value;
         this.parents = [];
@@ -10,7 +10,12 @@ class dependencyTree {
     }
 
     getDependencies() {
-        return this.node.dependencies;
+        if(this.node.dependencies != undefined) {
+            return this.node.dependencies;
+        }
+        else {
+            return [];
+        }
     }
 }
 
@@ -50,7 +55,7 @@ export function findById(id, sortedNodes) {
 }
 
 function buildRoots(values) {
-    return values.map( (value) => { return new dependencyTree(value) });
+    return values.map( (value) => { return new DependencyTree(value) });
 }
 
 function relateNodes(nodes) {
@@ -79,3 +84,82 @@ export function buildTree(values) {
     relateNodes(nodes);
     return filterRoot(nodes);
 }
+
+export function flattenTree(roots) {
+    let flattened = roots.map( (root) => {
+        return root.node;
+    });
+    let newNodes = roots;
+
+    while(newNodes.length != 0) {
+        let currNodes = newNodes.map(
+            (nodes) => { return nodes.children; } 
+        );
+
+        currNodes = [].concat.apply([], currNodes);
+        newNodes = currNodes.filter( 
+            (currNode) => { 
+                return flattened.indexOf(currNode.node)<0 
+            }
+        );
+
+        newNodes = newNodes.filter(
+            (newNode,index) => { return newNodes.indexOf(newNode,index+1)<0 }
+        );
+        newNodes.forEach( (newNode) => flattened.push(newNode.node));
+    }
+    return flattened;
+}
+
+export function getRelatives(treeNode) {
+    let allowedChildren = getChildrenId(treeNode);
+    let newParents = [treeNode];
+    let roots = [];
+
+    while ( newParents.length > 0 ){
+        let currParents = [];
+        allowedChildren = newParents
+            .map( (newParent) => { return newParent.getId(); })
+            .filter( (parentId) => { return allowedChildren.indexOf(parentId)<0; })
+            .concat(allowedChildren);
+        newParents.forEach((newParent) => {
+            currParents.push(newParent.parents);
+        });
+        currParents = [].concat.apply([],currParents);
+        currParents.forEach((currParent) => {
+            currParent.children = currParent.children.filter(
+                (child) => {
+                    return allowedChildren.indexOf(child.getId())>=0;
+                })
+        });
+        currParents.forEach((currParent) => {
+            if(currParent.parents.length == 0) roots.push(currParent);
+        })
+        newParents = currParents.filter(
+            (currParent) => {
+                let rootIds = roots.map((root) => { return root.getId() });
+                return rootIds.indexOf(currParent.getId())<0;
+            }
+        )
+    }
+    return roots;
+}
+
+function getChildrenId(treeNode) {
+    let childrenId = [treeNode.getId()];
+    let newNodes = [treeNode];
+
+    while( newNodes.length > 0 ){
+        let currNodes = [];
+        newNodes.forEach((newNode) => {
+            currNodes.push(newNode.children);
+        });
+        currNodes = [].concat.apply([],currNodes);
+        newNodes = currNodes.filter(
+            (currNode) => { return childrenId.indexOf(currNode.getId())<0; }
+        );
+        newNodes.forEach( (newNode) => childrenId.push(newNode.getId()));
+    }
+    return childrenId;
+}
+
