@@ -5,6 +5,8 @@ class GanttBar extends Component {
         super(props);
         this.scale = props.scale;
         this.start = props.start;
+        this.id = props.id;
+        this.onDoubleClick = props.onDoubleClick;
         this.duration = props.duration;
     }
 
@@ -17,11 +19,13 @@ class GanttBar extends Component {
     }
 
     render() {
+        var barId = this.id;
         return (
             <div style={{ backgroundColor: '#2a56c6',
                           marginLeft: this.getMarginLeft(),
                           width: this.getWidth() }}
-                className='bar' >
+                 onDoubleClick={() => this.onDoubleClick(barId)}
+                 className='bar' >
             </div>
         )
     }

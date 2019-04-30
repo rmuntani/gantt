@@ -3,20 +3,28 @@ import GanttBar from './GanttBar.jsx'
 import GanttYAxis from './GanttYAxis.jsx'
 import GanttXAxis from './GanttXAxis.jsx'
 import * as helpers from './helpers.js'
+import * as DT from './dependencyTree.js'
 
 class GanttChart extends Component {
     constructor(props) {
         super(props);
-        this.data = props.data;
+        this.scale = props.data.scale;
+        this.numTicks = props.data.numTicks;
+        this.originalTree = DT.buildTree(props.data.bars);
+        this.state = { 
+            tree: this.originalTree,
+            showFamily: false
+        };
         this.errors = [];
+        this.showRelatives = this.showRelatives.bind(this);
     }
 
     isDataValid() {
         this.errors = [];
 
-        this.isValidQuantity(this.data.scale,'Scale');
-        this.isValidQuantity(this.data.numTicks,'Number of ticks');
-        this.data.bars.reduce( 
+        this.isValidQuantity(this.scale,'Scale');
+        this.isValidQuantity(this.numTicks,'Number of ticks');
+        DT.flattenTree(this.state.tree).reduce( 
             (acc, bar, index) => acc && this.isValidBar(bar,index), true 
         );
 
@@ -54,25 +62,37 @@ class GanttChart extends Component {
         return true;
     }
 
-
     getBars() {
-        return this.data.bars.map(
+        return DT.flattenTree(this.state.tree).map(
             bar => { 
-                return <GanttBar scale={this.data.scale}
+                return <GanttBar scale={this.scale}
                                  start={bar.start}
                                  duration={bar.duration}
-                                 key={bar.id} /> 
+                                 id={bar.id}
+                                 key={bar.id}
+                                 onDoubleClick={this.showRelatives}/> 
             });
+    }
+
+    showRelatives(id) {
+        if(!this.state.showFamily) {
+            var currTree = DT.getRelatives(id, this.originalTree)
+        }
+        else {
+            var currTree = this.originalTree;
+        }
+        this.setState({ showFamily: !this.state.showFamily, 
+            tree: currTree });
     }
 
     render() {
         return (
             <React.Fragment>
                 <div className='chart'>
-                    <GanttYAxis numTicks={this.data.numTicks}/>
+                    <GanttYAxis numTicks={this.numTicks}/>
                     {this.getBars()}
                 </div>
-                < GanttXAxis scale={this.data.scale} numTicks={this.data.numTicks}/>
+                < GanttXAxis scale={this.scale} numTicks={this.numTicks}/>
             </React.Fragment>
         );
     }

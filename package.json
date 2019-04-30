@@ -2,10 +2,18 @@
   "name": "gantt",
   "version": "0.1.0",
   "jest": {
-    "collectCoverageFrom": ["./src"],
-    "roots": ["./tests"],
-    "setupFiles": ["./tests/setup.js"],
-    "testPathIgnorePatterns": ["./tests/setup.js"],
+    "collectCoverageFrom": [
+      "./src"
+    ],
+    "roots": [
+      "./tests"
+    ],
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "./tests/setup.js"
+    ],
     "verbose": true
   },
   "private": true,

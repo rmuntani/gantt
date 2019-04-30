@@ -54,6 +54,27 @@ export function findById(id, sortedNodes) {
     }
 }
 
+export function findNode(id,tree) {
+    let inspectNodes = tree;
+
+    while( inspectNodes.length > 0 ) {
+        let foundNode = inspectNodes.find( (node) => {
+            return node.getId()==id;
+        });
+
+        if (foundNode == undefined) {
+            let children = inspectNodes.map(
+                (node) => {
+                    return node.children;
+                })
+            inspectNodes = [].concat.apply([],children);
+        }
+        else return foundNode;
+    }
+
+    return null;
+}
+
 function buildRoots(values) {
     return values.map( (value) => { return new DependencyTree(value) });
 }
@@ -111,10 +132,14 @@ export function flattenTree(roots) {
     return flattened;
 }
 
-export function getRelatives(treeNode) {
+export function getRelatives(id, tree) {
+    let duplicatedTree = duplicateTree(tree);
+    let treeNode = findNode(id,duplicatedTree)
     let allowedChildren = getChildrenId(treeNode);
+    let allowedParents = getParentsId(treeNode);
+    let allowedNodes = []
     let newParents = [treeNode];
-    let roots = [];
+    let roots = treeNode.parents.length == 0 ? [treeNode] : [];
 
     while ( newParents.length > 0 ){
         let currParents = [];
@@ -132,6 +157,9 @@ export function getRelatives(treeNode) {
                     return allowedChildren.indexOf(child.getId())>=0;
                 })
         });
+        //problema: coloco varais vezes a mesma coisa
+        //na primeira vez que coloco algo, ja tiro as criancas nao permitidas, que depois serao permitidas
+        //solucao: definir de inicio as criancas permitidas
         currParents.forEach((currParent) => {
             if(currParent.parents.length == 0) roots.push(currParent);
         })
@@ -163,3 +191,24 @@ function getChildrenId(treeNode) {
     return childrenId;
 }
 
+function getParentsId(treeNode) {
+    let parentId = [treeNode.getId()];
+    let newNodes = [treeNode];
+
+    while( newNodes.length > 0 ){
+        let currNodes = [];
+        newNodes.forEach((newNode) => {
+            currNodes.push(newNode.parents);
+        });
+        currNodes = [].concat.apply([],currNodes);
+        newNodes = currNodes.filter(
+            (currNode) => { return parentId.indexOf(currNode.getId())<0; }
+        );
+        newNodes.forEach( (newNode) => parentId.push(newNode.getId()));
+    }
+    return parentId;
+}
+
+function duplicateTree(tree) {
+    return buildTree(flattenTree(tree));
+}
