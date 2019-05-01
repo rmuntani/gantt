@@ -137,16 +137,13 @@ export function getRelatives(id, tree) {
     let treeNode = findNode(id,duplicatedTree)
     let allowedChildren = getChildrenId(treeNode);
     let allowedParents = getParentsId(treeNode);
-    let allowedNodes = []
+    let allowedNodes = allowedChildren.concat(
+        allowedParents.filter( (parent) => { return allowedChildren.indexOf(parent)<0; }));
     let newParents = [treeNode];
     let roots = treeNode.parents.length == 0 ? [treeNode] : [];
 
     while ( newParents.length > 0 ){
         let currParents = [];
-        allowedChildren = newParents
-            .map( (newParent) => { return newParent.getId(); })
-            .filter( (parentId) => { return allowedChildren.indexOf(parentId)<0; })
-            .concat(allowedChildren);
         newParents.forEach((newParent) => {
             currParents.push(newParent.parents);
         });
@@ -154,14 +151,13 @@ export function getRelatives(id, tree) {
         currParents.forEach((currParent) => {
             currParent.children = currParent.children.filter(
                 (child) => {
-                    return allowedChildren.indexOf(child.getId())>=0;
+                    return allowedNodes.indexOf(child.getId())>=0;
                 })
         });
-        //problema: coloco varais vezes a mesma coisa
-        //na primeira vez que coloco algo, ja tiro as criancas nao permitidas, que depois serao permitidas
-        //solucao: definir de inicio as criancas permitidas
         currParents.forEach((currParent) => {
-            if(currParent.parents.length == 0) roots.push(currParent);
+            if(currParent.parents.length == 0 &&
+                roots.map((root) => {return root.getId()}).indexOf(currParent.getId())<0) 
+                roots.push(currParent);
         })
         newParents = currParents.filter(
             (currParent) => {

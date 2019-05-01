@@ -338,7 +338,7 @@ describe('.getRelatives', () => {
             .toEqual(expectedData.sort(orderById));
     })
 
-    it.only('should get all relatives of multiple complex trees', () => {
+    it('should get all relatives of multiple complex trees', () => {
         let values = [{id:1, dependencies:[]}, 
                      {id:2, dependencies:[1]},
                      {id:3, dependencies:[1]},
@@ -350,9 +350,9 @@ describe('.getRelatives', () => {
                      {id:20, dependencies:[7,3]},
                      {id:21, dependencies:[20,1,19]}];
                      
-      /*  let expectedDataId19 = [{id:17, dependencies:[]},
-                            {id:19, dependencies:[17]},
-                            {id:21, dependencies:[20,1,19]}];
+        let expectedDataId19 = [{id:17, dependencies:[]},
+                                {id:19, dependencies:[17]},
+                                {id:21, dependencies:[20,1,19]}];
         let expectedDataId1 = [{id:1, dependencies:[]}, 
                                {id:2, dependencies:[1]},
                                {id:3, dependencies:[1]},
@@ -360,7 +360,7 @@ describe('.getRelatives', () => {
                                {id:7, dependencies:[2]}, 
                                {id:9, dependencies:[1,7]},
                                {id:20, dependencies:[7,3]},
-                               {id:21, dependencies:[20,1,19]}]; */
+                               {id:21, dependencies:[20,1,19]}]; 
         let expectedDataId21 = [{id:1, dependencies:[]}, 
                                 {id:2, dependencies:[1]},
                                 {id:3, dependencies:[1]},
@@ -371,18 +371,14 @@ describe('.getRelatives', () => {
                                 {id:21, dependencies:[20,1,19]}]; 
 
         let tree = dependencyTree.buildTree(values);
-        // let relativesTreeId19 = dependencyTree.getRelatives(19,tree);
-        // let relativesTreeId1 = dependencyTree.getRelatives(1,tree);
+        let relativesTreeId19 = dependencyTree.getRelatives(19,tree);
+        let relativesTreeId1 = dependencyTree.getRelatives(1,tree);
         let relativesTreeId21 = dependencyTree.getRelatives(21,tree);
 
-        console.log(dependencyTree.flattenTree(relativesTreeId21));
-        console.log(expectedDataId21);
-        //erros: triplicando 1, comendo todas as dependencias
-
-        // expect(dependencyTree.flattenTree(relativesTreeId19).sort(orderById))
-        //     .toEqual(expectedDataId19.sort(orderById));
-        // expect(dependencyTree.flattenTree(relativesTreeId1).sort(orderById))
-        //     .toEqual(expectedDataId1.sort(orderById));
+        expect(dependencyTree.flattenTree(relativesTreeId19).sort(orderById))
+            .toEqual(expectedDataId19.sort(orderById));
+        expect(dependencyTree.flattenTree(relativesTreeId1).sort(orderById))
+            .toEqual(expectedDataId1.sort(orderById));
         expect(dependencyTree.flattenTree(relativesTreeId21).sort(orderById))
             .toEqual(expectedDataId21.sort(orderById));
 
