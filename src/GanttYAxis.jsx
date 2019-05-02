@@ -1,29 +1,37 @@
 import React, { Component } from 'react';
 
 class GanttYAxis extends Component {
-    constructor(props) {
-        super(props)
-        this.numTicks = props.numTicks
-    }
+  constructor(props) {
+    super(props);
+    this.numTicks = props.numTicks;
+  }
 
-    getLeft(i) {
-        return i/this.numTicks*100 + '%'
-    }
+  getLeft(i) {
+    return `${i / this.numTicks * 100}%`;
+  }
 
-    render() {
-        let ticks = [];
+  render() {
+    const ticks = [];
 
-        for(let i = 1; i<this.numTicks; i++) {
-            ticks.push(<div style={{left: this.getLeft(i),
-                                    position: 'absolute'}}
-                            key={i}
-                            className='ybar'></div>)
+    for (let i = 1; i < this.numTicks; i += 1) {
+      ticks.push(<div
+        style={
+          {
+            left: this.getLeft(i),
+            position: 'absolute',
+          }
         }
-        
-        return (<React.Fragment>
-                    {ticks}
-                </React.Fragment>)
+        key={i}
+        className="ybar"
+      />);
     }
+
+    return (
+      <React.Fragment>
+        {ticks}
+      </React.Fragment>
+    );
+  }
 }
 
 export default GanttYAxis;

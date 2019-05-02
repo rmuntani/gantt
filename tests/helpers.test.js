@@ -26,3 +26,13 @@ describe('isEmpty', () => {
         expect(helpers.isInvalidValue(['jaqueline'])).toEqual(false);
     });
 });
+
+describe('roundNumber', () => {
+    it('returns the rounded number', () => {
+        expect(helpers.roundNumber(11.99,0)).toEqual(12);
+        expect(helpers.roundNumber(11.91,1)).toEqual(11.9);
+        expect(helpers.roundNumber(11.92456,2)).toEqual(11.92);
+        expect(helpers.roundNumber(11.92456,3)).toEqual(11.925);
+        expect(helpers.roundNumber(11.92456,4)).toEqual(11.9246);
+    })
+})
