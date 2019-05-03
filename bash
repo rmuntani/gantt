@@ -5919,3 +5919,360 @@ nothing added to commit but untracked files present (use "git add" to track)
 [0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
 [K[1A[K[1A[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
 
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A  isNumeric
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mreturns the right result (5ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A  isEmpty
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mreturns the right result (4ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A  roundNumber
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mreturns the rounded number (3ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A  GanttBar
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mcan render a bar with the correct margin left (3ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mcan render a bar with the correct width (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttBar.test.js[22m
+[K[1A[K[1A[999D[K[1mTest Suites: [22m[1m[32m6 passed[39m[22m, 6 total
+[1mTests:       [22m[1m[32m45 passed[39m[22m, 45 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        [1m[33m5.117s[39m[22m
+[2mRan all test suites[22m[2m matching [22m/-t|test\/*/i[2m.[22m
+# npm run test tes   test/*
+
+> gantt@0.1.0 test /react
+> jest -- -t "test/*"
+
+[1m[2mDetermining test suites to run...[1m[22m[999D[K
+[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A  GanttChart
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the chart with bars, scale and vertical lines (62ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the right number of bars, ticks and vertical lines (18ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A  GanttChart.getBars
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return no bar when data has no bars[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return one bar with the correct properties (4ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return many bars with the right properties (3ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A  GanttChart.isDataValid
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    true
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen there is no bar data[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen there is one valid bar (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen there are multiple valid bar (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    false
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen there is no scale (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen there is no number of ticks[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen scale is negative (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen numTicks is negative (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen bar has no start[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen bar has no duration (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen start is negative (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen duration is negative (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A      [32m✓[39m [2mwhen id is not valid[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A  double-click on a bar
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould show only relatives of the clicked node (57ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould show the full tree when a bar is doubleclicked twice (15ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A[1m[31m  [1m● [1mdouble-click on a bar › should show only relatives of the clicked node[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat GanttChart.getRelatives ([2msrc/GanttChart.jsx[2m:90:21)[2m[22m
+[2m      [2mat onDoubleClick ([2msrc/GanttBar.jsx[2m:32:35)[2m[22m
+[2m      [2mat Object.<anonymous> ([2m[0m[36mtests/GanttChart.test.js[39m[0m[2m:274:9)[2m[22m
+
+[1m[31m  [1m● [1mdouble-click on a bar › should show the full tree when a bar is doubleclicked twice[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat GanttChart.getRelatives ([2msrc/GanttChart.jsx[2m:90:21)[2m[22m
+[2m      [2mat onDoubleClick ([2msrc/GanttBar.jsx[2m:32:35)[2m[22m
+[2m      [2mat Object.<anonymous> ([2m[0m[36mtests/GanttChart.test.js[39m[0m[2m:304:9)[2m[22m
+
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttChart.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A  .findById
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the index of the existing numbers (3ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return null for non-existing numbers (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A  .buildTree
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould build a tree with roots only (5ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould build a simple tree (2ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould build multiple simple trees (4ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould build a tree with complex relationships (3ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould build multiple trees with multiple complex relationships (8ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A  .flattenTree
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould flatten a simple tree (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould flatten a tree with children[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould flatten multiple simple trees (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould flatten one tree with complex relationships[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould flatten multiple complex trees (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A  .getRelatives
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould get all relatives of a simple tree (25ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould get all relatives of a single tree when there are multiple trees (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould get all relatives of a complex single tree[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A    [31m✕[39m [2mshould get all relatives of multiple complex trees (1ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A[1m[31m  [1m● [1m.getRelatives › should get all relatives of a simple tree[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat Object.getRelatives ([2m[0m[36mtests/dependencyTree.test.js[39m[0m[2m:302:44)[2m[22m
+
+[1m[31m  [1m● [1m.getRelatives › should get all relatives of a single tree when there are multiple trees[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat Object.getRelatives ([2m[0m[36mtests/dependencyTree.test.js[39m[0m[2m:316:44)[2m[22m
+
+[1m[31m  [1m● [1m.getRelatives › should get all relatives of a complex single tree[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat Object.getRelatives ([2m[0m[36mtests/dependencyTree.test.js[39m[0m[2m:335:44)[2m[22m
+
+[1m[31m  [1m● [1m.getRelatives › should get all relatives of multiple complex trees[39m[22m
+
+    TypeError: Cannot read property 'getId' of undefined
+[2m[22m
+[2m    [0m [90m 184 | [39m[0m[22m
+[2m    [0m [90m 185 | [39m[36mfunction[39m getChildrenId(treeNode) {[0m[22m
+[2m    [0m[31m[1m>[2m[39m[90m 186 | [39m  let childrenId [33m=[39m [treeNode[33m.[39mgetId()][33m;[39m[0m[22m
+[2m    [0m [90m     | [39m                             [31m[1m^[2m[39m[0m[22m
+[2m    [0m [90m 187 | [39m  let newNodes [33m=[39m [treeNode][33m;[39m[0m[22m
+[2m    [0m [90m 188 | [39m[0m[22m
+[2m    [0m [90m 189 | [39m  [36mwhile[39m( newNodes[33m.[39mlength [33m>[39m [35m0[39m ){[0m[22m
+[2m[22m
+[2m      [2mat getId ([2msrc/dependencyTree.js[2m:186:30)[2m[22m
+[2m      [2mat Object.getChildrenId [as getRelatives] ([2msrc/dependencyTree.js[2m:151:25)[2m[22m
+[2m      [2mat Object.getRelatives ([2m[0m[36mtests/dependencyTree.test.js[39m[0m[2m:374:48)[2m[22m
+
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mdependencyTree.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A  GanttXAxis
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the correct number of ticks (15ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the correct scale (14ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the correct rounded scale (9ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttXAxis.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A  GanttYAxis
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return the right number of vertical lines (15ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A    [32m✓[39m [2mshould return vertical lines with the correct left position (8ms)[22m
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A
+
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mGanttYAxis.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A[K[1A
+[0m[7m[33m[1m RUNS [22m[39m[27m[0m [2mtests/[22m[1mhelpers.test.js[22m
+[K[1A
