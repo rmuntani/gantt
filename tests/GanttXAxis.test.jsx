@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import React from 'react';
-import GanttXAxis from '../src/GanttXAxis.jsx';
+import GanttXAxis from '../src/GanttXAxis';
 
 describe('GanttXAxis', () => {
   it('should return the correct number of ticks', () => {
@@ -13,7 +13,7 @@ describe('GanttXAxis', () => {
     const ticks = xAxis.childAt(0);
     const scaleNums = [];
 
-    for (let i = 0; i < ticks.children().length; i++) {
+    for (let i = 0; i < ticks.children().length; i += 1) {
       scaleNums.push(ticks.childAt(i).text());
     }
 
@@ -28,7 +28,7 @@ describe('GanttXAxis', () => {
     const ticks = xAxis.childAt(0);
     const scaleNums = [];
 
-    for (let i = 0; i < ticks.children().length; i++) {
+    for (let i = 0; i < ticks.children().length; i += 1) {
       scaleNums.push(ticks.childAt(i).text());
     }
 

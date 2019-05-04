@@ -5,7 +5,7 @@ function orderById(a, b) {
 }
 
 function findNodeById(nodes, id) {
-  return nodes.find(node => node.getId() == id);
+  return nodes.find(node => node.getId() === id);
 }
 
 describe('.findById', () => {

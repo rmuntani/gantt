@@ -6,8 +6,8 @@ describe('isNumeric', () => {
     expect(helpers.isNumeric(null)).toEqual(false);
     expect(helpers.isNumeric(NaN)).toEqual(false);
     expect(helpers.isNumeric('eita gota')).toEqual(false);
-    expect(helpers.isNumeric('99')).toEqual(true);
-    expect(helpers.isNumeric('99.9')).toEqual(true);
+    expect(helpers.isNumeric('99')).toEqual(false);
+    expect(helpers.isNumeric('99.9')).toEqual(false);
     expect(helpers.isNumeric(99)).toEqual(true);
     expect(helpers.isNumeric(99.9)).toEqual(true);
   });

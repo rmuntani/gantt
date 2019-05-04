@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import React from 'react';
-import GanttYAxis from '../src/GanttYAxis.jsx';
+import GanttYAxis from '../src/GanttYAxis';
 
 describe('GanttYAxis', () => {
   it('should return the right number of vertical lines', () => {
@@ -12,7 +12,7 @@ describe('GanttYAxis', () => {
     const yAxis = mount(<GanttYAxis numTicks={10} />);
     const yBar = yAxis.children();
     const left = [];
-    for (let i = 0; i < yBar.length; i++) {
+    for (let i = 0; i < yBar.length; i += 1) {
       left.push(yBar.get(i).props.style.left);
     }
 

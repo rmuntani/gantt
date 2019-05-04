@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class GanttBar extends Component {
   constructor(props) {
@@ -35,5 +36,18 @@ class GanttBar extends Component {
     );
   }
 }
+
+GanttBar.propTypes = {
+  duration: PropTypes.number.isRequired,
+  id: PropTypes.number,
+  onDoubleClick: PropTypes.func,
+  scale: PropTypes.number.isRequired,
+  start: PropTypes.number.isRequired,
+};
+
+GanttBar.defaultProps = {
+  id: null,
+  onDoubleClick: null,
+};
 
 export default GanttBar;

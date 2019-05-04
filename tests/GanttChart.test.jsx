@@ -290,17 +290,17 @@ describe('double-click on a bar', () => {
     };
     const chart = mount(<GanttChart data={mockData} />);
     let bars = chart.find('GanttBar');
-    const barId19 = bars.findWhere(bar => bar.key() == 19);
+    const barId19 = bars.findWhere(bar => bar.key() === '19');
     const barId19Div = barId19.find('div');
 
     barId19Div.prop('onDoubleClick')();
     chart.update();
     bars = chart.find('GanttBar');
 
-    expect((bars.findWhere(bar => bar.key() == 1).exists())).toEqual(false);
-    expect((bars.findWhere(bar => bar.key() == 17).exists())).toEqual(true);
-    expect((bars.findWhere(bar => bar.key() == 19).exists())).toEqual(true);
-    expect((bars.findWhere(bar => bar.key() == 21).exists())).toEqual(true);
+    expect((bars.findWhere(bar => bar.key() === '1').exists())).toEqual(false);
+    expect((bars.findWhere(bar => bar.key() === '17').exists())).toEqual(true);
+    expect((bars.findWhere(bar => bar.key() === '19').exists())).toEqual(true);
+    expect((bars.findWhere(bar => bar.key() === '21').exists())).toEqual(true);
   });
 
   it('should show the full tree when a bar is doubleclicked twice', () => {
@@ -342,7 +342,7 @@ describe('double-click on a bar', () => {
     };
     const chart = mount(<GanttChart data={mockData} />);
     const bars = chart.find('GanttBar');
-    const barId19 = bars.findWhere(bar => bar.key() == 19);
+    const barId19 = bars.findWhere(bar => bar.key() === '19');
     const barId19Div = barId19.find('div');
 
     barId19Div.prop('onDoubleClick')();
@@ -351,6 +351,6 @@ describe('double-click on a bar', () => {
     chart.update();
 
     expect(chart.find('GanttBar').length).toEqual(10);
-    expect((bars.findWhere(bar => bar.key() == 1).exists())).toEqual(true);
+    expect((bars.findWhere(bar => bar.key() === '1').exists())).toEqual(true);
   });
 });

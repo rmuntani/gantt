@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import GanttBar from './GanttBar';
 import GanttYAxis from './GanttYAxis';
 import GanttXAxis from './GanttXAxis';
@@ -56,15 +57,16 @@ class GanttChart extends Component {
   }
 
   isValidQuantity(value, name) {
+    let validQuantity = true;
     if (helpers.isInvalidValue(value)) {
       this.errors.push(`${name} is necessary to draw the chart`);
-      return false;
+      validQuantity = false;
     } else if (!helpers.isNumeric(value) || value < 0) {
       this.errors.push(`${name} must be a positive number`);
-      return false;
+      validQuantity = false;
     }
 
-    return true;
+    return validQuantity;
   }
 
   isDataValid() {
@@ -75,7 +77,7 @@ class GanttChart extends Component {
     this.isValidQuantity(this.numTicks, 'Number of ticks');
     DT.flattenTree(tree)
       .reduce(
-        (acc, bar, index) => acc && this.isValidBar(bar, index), true
+        (acc, bar, index) => acc && this.isValidBar(bar, index), true,
       );
 
     if (this.errors.length === 0) return true;
@@ -114,5 +116,20 @@ class GanttChart extends Component {
     );
   }
 }
+
+GanttChart.propTypes = {
+  data: PropTypes.shape({
+    bars: PropTypes.arrayOf(
+      PropTypes.shape({
+        dependencies: PropTypes.arrayOf(PropTypes.number),
+        duration: PropTypes.number,
+        id: PropTypes.number,
+        start: PropTypes.number,
+      }),
+    ),
+    numTicks: PropTypes.number.isRequired,
+    scale: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default GanttChart;

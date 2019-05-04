@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import * as helpers from './helpers';
 
 class GanttXAxis extends Component {
@@ -17,7 +18,7 @@ class GanttXAxis extends Component {
   }
 
   render() {
-    let ticks = [];
+    const ticks = [];
 
     for (let i = 0; i <= this.numTicks; i += 1) {
       ticks.push(
@@ -40,5 +41,10 @@ class GanttXAxis extends Component {
     );
   }
 }
+
+GanttXAxis.propTypes = {
+  scale: PropTypes.number.isRequired,
+  numTicks: PropTypes.number.isRequired,
+};
 
 export default GanttXAxis;

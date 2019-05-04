@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import GanttBar from '../src/GanttBar.jsx';
+import GanttBar from '../src/GanttBar';
 
 describe('GanttBar', () => {
   it('can render a bar with the correct margin left', () => {

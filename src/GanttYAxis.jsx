@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class GanttYAxis extends Component {
   constructor(props) {
@@ -33,5 +34,9 @@ class GanttYAxis extends Component {
     );
   }
 }
+
+GanttYAxis.propTypes = {
+  numTicks: PropTypes.number.isRequired,
+};
 
 export default GanttYAxis;
