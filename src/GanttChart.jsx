@@ -4,16 +4,16 @@ import GanttBar from './GanttBar';
 import GanttYAxis from './GanttYAxis';
 import GanttXAxis from './GanttXAxis';
 import * as helpers from './helpers';
-import * as DT from './dependencyTree';
+import * as DG from './dependencyGraph';
 
 class GanttChart extends Component {
   constructor(props) {
     super(props);
     this.scale = props.data.scale;
     this.numTicks = props.data.numTicks;
-    this.originalTree = DT.buildTree(props.data.bars);
+    this.originalGraph = DG.buildGraph(props.data.bars);
     this.state = {
-      tree: this.originalTree,
+      graph: this.originalGraph,
       showFamily: false,
     };
     this.errors = [];
@@ -21,8 +21,8 @@ class GanttChart extends Component {
   }
 
   getBars() {
-    const { tree } = this.state;
-    return DT.flattenTree(tree).map(
+    const { graph } = this.state;
+    return DG.flattenGraph(graph).map(
       (bar) => {
         const { duration, start, id } = bar;
         return (
@@ -70,12 +70,12 @@ class GanttChart extends Component {
   }
 
   isDataValid() {
-    const { tree } = this.state;
+    const { graph } = this.state;
     this.errors = [];
 
     this.isValidQuantity(this.scale, 'Scale');
     this.isValidQuantity(this.numTicks, 'Number of ticks');
-    DT.flattenTree(tree)
+    DG.flattenGraph(graph)
       .reduce(
         (acc, bar, index) => acc && this.isValidBar(bar, index), true,
       );
@@ -87,16 +87,16 @@ class GanttChart extends Component {
 
   showRelatives(id) {
     const { showFamily } = this.state;
-    let currTree;
+    let currGraph;
     if (!showFamily) {
-      currTree = DT.getRelatives(id, this.originalTree);
+      currGraph = DG.getRelatives(id, this.originalGraph);
     } else {
-      currTree = this.originalTree;
+      currGraph = this.originalGraph;
     }
     this.setState(
       state => ({
         showFamily: !state.showFamily,
-        tree: currTree,
+        graph: currGraph,
       }),
     );
   }

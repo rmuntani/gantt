@@ -1,4 +1,4 @@
-import * as dependencyTree from '../src/dependencyTree';
+import * as dependencyGraph from '../src/dependencyGraph';
 
 function orderById(a, b) {
   return a.id - b.id;
@@ -8,34 +8,34 @@ function findNodeById(nodes, id) {
   return nodes.find(node => node.getId() === id);
 }
 
-describe('.findById', () => {
+describe('.findIndexWithId', () => {
   const nodes = [{ id: 1 }, { id: 3 }, { id: 4 }, { id: 7 }, { id: 8 }];
 
   it('should return the index of the existing numbers', () => {
-    expect(dependencyTree.findById(1, nodes)).toEqual(0);
-    expect(dependencyTree.findById(3, nodes)).toEqual(1);
-    expect(dependencyTree.findById(4, nodes)).toEqual(2);
-    expect(dependencyTree.findById(7, nodes)).toEqual(3);
-    expect(dependencyTree.findById(8, nodes)).toEqual(4);
+    expect(dependencyGraph.findIndexWithId(1, nodes)).toEqual(0);
+    expect(dependencyGraph.findIndexWithId(3, nodes)).toEqual(1);
+    expect(dependencyGraph.findIndexWithId(4, nodes)).toEqual(2);
+    expect(dependencyGraph.findIndexWithId(7, nodes)).toEqual(3);
+    expect(dependencyGraph.findIndexWithId(8, nodes)).toEqual(4);
   });
 
   it('should return null for non-existing numbers', () => {
-    expect(dependencyTree.findById(0, nodes)).toEqual(null);
-    expect(dependencyTree.findById(2, nodes)).toEqual(null);
-    expect(dependencyTree.findById(5, nodes)).toEqual(null);
-    expect(dependencyTree.findById(6, nodes)).toEqual(null);
-    expect(dependencyTree.findById(9, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexWithId(0, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexWithId(2, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexWithId(5, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexWithId(6, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexWithId(9, nodes)).toEqual(null);
   });
 });
 
-describe('.buildTree', () => {
-  it('should build a tree with roots only', () => {
+describe('.buildGraph', () => {
+  it('should build a graph with roots only', () => {
     const nodes = [{ id: 1, dependencies: [] },
       { id: 3, dependencies: [] },
       { id: 4, dependencies: [] },
       { id: 7, dependencies: [] },
       { id: 8, dependencies: [] }];
-    const roots = dependencyTree.buildTree(nodes);
+    const roots = dependencyGraph.buildGraph(nodes);
 
     expect(roots.length).toEqual(5);
 
@@ -61,11 +61,11 @@ describe('.buildTree', () => {
     expect(rootId8.children.length).toEqual(0);
   });
 
-  it('should build a simple tree', () => {
+  it('should build a simple graph', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] }];
-    const roots = dependencyTree.buildTree(values);
+    const roots = dependencyGraph.buildGraph(values);
 
     expect(roots.length).toEqual(1);
 
@@ -84,14 +84,14 @@ describe('.buildTree', () => {
     expect(secondChild.children.length).toEqual(0);
   });
 
-  it('should build multiple simple trees', () => {
+  it('should build multiple simple graphs', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] },
       { id: 4, dependencies: [] },
       { id: 7, dependencies: [4] },
       { id: 9, dependencies: [7] }];
-    const roots = dependencyTree.buildTree(values);
+    const roots = dependencyGraph.buildGraph(values);
 
     expect(roots.length).toEqual(2);
 
@@ -120,7 +120,7 @@ describe('.buildTree', () => {
     expect(nodeId9.children.length).toEqual(0);
   });
 
-  it('should build a tree with complex relationships', () => {
+  it('should build a graph with complex relationships', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
@@ -128,7 +128,7 @@ describe('.buildTree', () => {
       { id: 7, dependencies: [2] },
       { id: 9, dependencies: [1, 7] }];
 
-    const roots = dependencyTree.buildTree(values);
+    const roots = dependencyGraph.buildGraph(values);
 
     expect(roots.length).toEqual(1);
 
@@ -161,7 +161,7 @@ describe('.buildTree', () => {
     expect(nodeId9.children.length).toEqual(0);
   });
 
-  it('should build multiple trees with multiple complex relationships', () => {
+  it('should build multiple graphs with multiple complex relationships', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
@@ -173,12 +173,12 @@ describe('.buildTree', () => {
       { id: 20, dependencies: [7, 3] },
       { id: 21, dependencies: [20, 1, 19] }];
 
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(tree.length).toEqual(2);
+    expect(graph.length).toEqual(2);
 
-    const nodeId1 = findNodeById(tree, 1);
-    const nodeId17 = findNodeById(tree, 17);
+    const nodeId1 = findNodeById(graph, 1);
+    const nodeId17 = findNodeById(graph, 17);
 
     expect(nodeId1.parents.length).toEqual(0);
     expect(nodeId1.children.length).toEqual(4);
@@ -223,56 +223,56 @@ describe('.buildTree', () => {
   });
 });
 
-describe('.flattenTree', () => {
-  it('should flatten a simple tree', () => {
+describe('.flattenGraph', () => {
+  it('should flatten a simple graph', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 3, dependencies: [] },
       { id: 4, dependencies: [] },
       { id: 7, dependencies: [] },
       { id: 8, dependencies: [] }];
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(dependencyTree.flattenTree(tree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 
-  it('should flatten a tree with children', () => {
+  it('should flatten a graph with children', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] }];
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(dependencyTree.flattenTree(tree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 
-  it('should flatten multiple simple trees', () => {
+  it('should flatten multiple simple graphs', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] },
       { id: 4, dependencies: [] },
       { id: 7, dependencies: [4] },
       { id: 9, dependencies: [7] }];
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(dependencyTree.flattenTree(tree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 
-  it('should flatten one tree with complex relationships', () => {
+  it('should flatten one graph with complex relationships', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
       { id: 4, dependencies: [2, 3] },
       { id: 7, dependencies: [2] },
       { id: 9, dependencies: [1, 7] }];
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(dependencyTree.flattenTree(tree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 
-  it('should flatten multiple complex trees', () => {
+  it('should flatten multiple complex graphs', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
@@ -284,41 +284,47 @@ describe('.flattenTree', () => {
       { id: 20, dependencies: [7, 3] },
       { id: 21, dependencies: [20, 1, 19] }];
 
-    const tree = dependencyTree.buildTree(values);
+    const graph = dependencyGraph.buildGraph(values);
 
-    expect(dependencyTree.flattenTree(tree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 });
 
+describe('.validateDependencies', () => {
+  it('should detect when graph has a circular relationship', () => {
+    throw(new Error('not implemented'));
+  });
+})
+
 describe('.getRelatives', () => {
-  it('should get all relatives of a simple tree', () => {
+  it('should get all relatives of a simple graph', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] }];
-    const tree = dependencyTree.buildTree(values);
-    const relativesTree = dependencyTree.getRelatives(2, tree);
+    const graph = dependencyGraph.buildGraph(values);
+    const relativesGraph = dependencyGraph.getRelatives(2, graph);
 
-    expect(dependencyTree.flattenTree(relativesTree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
 
-  it('should get all relatives of a single tree when there are multiple trees', () => {
+  it('should get all relatives of a single graph when there are multiple graphs', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [2] },
       { id: 4, dependencies: [] },
       { id: 7, dependencies: [4] },
       { id: 9, dependencies: [7] }];
-    const tree = dependencyTree.buildTree(values);
-    const relativesTree = dependencyTree.getRelatives(2, tree);
+    const graph = dependencyGraph.buildGraph(values);
+    const relativesGraph = dependencyGraph.getRelatives(2, graph);
     const expectedData = values.splice(0, 3);
 
-    expect(dependencyTree.flattenTree(relativesTree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraph).sort(orderById))
       .toEqual(expectedData.sort(orderById));
   });
 
-  it('should get all relatives of a complex single tree', () => {
+  it('should get all relatives of a complex single graph', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
@@ -329,14 +335,14 @@ describe('.getRelatives', () => {
       { id: 2, dependencies: [1] },
       { id: 7, dependencies: [2] },
       { id: 9, dependencies: [1, 7] }];
-    const tree = dependencyTree.buildTree(values);
-    const relativesTree = dependencyTree.getRelatives(7, tree);
+    const graph = dependencyGraph.buildGraph(values);
+    const relativesGraph = dependencyGraph.getRelatives(7, graph);
 
-    expect(dependencyTree.flattenTree(relativesTree).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraph).sort(orderById))
       .toEqual(expectedData.sort(orderById));
   });
 
-  it('should get all relatives of multiple complex trees', () => {
+  it('should get all relatives of multiple complex graphs', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] },
@@ -368,16 +374,16 @@ describe('.getRelatives', () => {
       { id: 20, dependencies: [7, 3] },
       { id: 21, dependencies: [20, 1, 19] }];
 
-    const tree = dependencyTree.buildTree(values);
-    const relativesTreeId19 = dependencyTree.getRelatives(19, tree);
-    const relativesTreeId1 = dependencyTree.getRelatives(1, tree);
-    const relativesTreeId21 = dependencyTree.getRelatives(21, tree);
+    const graph = dependencyGraph.buildGraph(values);
+    const relativesGraphId19 = dependencyGraph.getRelatives(19, graph);
+    const relativesGraphId1 = dependencyGraph.getRelatives(1, graph);
+    const relativesGraphId21 = dependencyGraph.getRelatives(21, graph);
 
-    expect(dependencyTree.flattenTree(relativesTreeId19).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraphId19).sort(orderById))
       .toEqual(expectedDataId19.sort(orderById));
-    expect(dependencyTree.flattenTree(relativesTreeId1).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraphId1).sort(orderById))
       .toEqual(expectedDataId1.sort(orderById));
-    expect(dependencyTree.flattenTree(relativesTreeId21).sort(orderById))
+    expect(dependencyGraph.flattenGraph(relativesGraphId21).sort(orderById))
       .toEqual(expectedDataId21.sort(orderById));
   });
 });
