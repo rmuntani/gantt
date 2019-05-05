@@ -293,9 +293,84 @@ describe('.flattenGraph', () => {
 
 describe('.validateDependencies', () => {
   it('should detect when graph has a circular relationship', () => {
-    throw(new Error('not implemented'));
+    const short = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1, 3] },
+      { id: 3, dependencies: [2] }];
+    const long = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1, 7] },
+      { id: 3, dependencies: [2] },
+      { id: 4, dependencies: [3] },
+      { id: 5, dependencies: [4] },
+      { id: 6, dependencies: [5] },
+      { id: 7, dependencies: [6] }];
+
+    const shortGraph = dependencyGraph.buildGraph(short);
+    const longGraph = dependencyGraph.buildGraph(long);
+
+    const shortErrors = dependencyGraph.validateGraph(shortGraph);
+    const longErrors = dependencyGraph.validateGraph(longGraph);
+
+    expect(shortErrors.length).toEqual(1);
+    expect(shortErrors).toEqual(expect.arrayContaining(['Graph has circular dependency']));
+
+    expect(longErrors.length).toEqual(1);
+    expect(longErrors).toEqual(expect.arrayContaining(['Graph has circular dependency']));
   });
-})
+
+  it('should detect when graph has no roots', () => {
+    const short = [{ id: 1, dependencies: [2] },
+      { id: 2, dependencies: [1] }];
+    const long = [{ id: 1, dependencies: [2] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [2] },
+      { id: 4, dependencies: [3] },
+      { id: 5, dependencies: [4] },
+      { id: 6, dependencies: [5] },
+      { id: 7, dependencies: [6] },
+      { id: 8, dependencies: [7] }];
+
+    const shortGraph = dependencyGraph.buildGraph(short);
+    const longGraph = dependencyGraph.buildGraph(long);
+
+    const shortErrors = dependencyGraph.validateGraph(shortGraph);
+    const longErrors = dependencyGraph.validateGraph(longGraph);
+
+    expect(shortErrors.length).toEqual(1);
+    expect(shortErrors).toEqual(
+      expect.arrayContaining(['Root is empty (a node without dependencies is probably missing)']),
+    );
+
+    expect(longErrors.length).toEqual(1);
+    expect(longErrors).toEqual(
+      expect.arrayContaining(['Root is empty (a node without dependencies is probably missing)']),
+    );
+  });
+
+  it('should detect when graph is valid', () => {
+    const short = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [2] }];
+    const long = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [1] },
+      { id: 4, dependencies: [3, 2] },
+      { id: 7, dependencies: [2] },
+      { id: 9, dependencies: [1, 7] },
+      { id: 17, dependencies: [] },
+      { id: 19, dependencies: [17] },
+      { id: 20, dependencies: [7, 3] },
+      { id: 21, dependencies: [20, 1, 19] }];
+
+    const shortGraph = dependencyGraph.buildGraph(short);
+    const longGraph = dependencyGraph.buildGraph(long);
+
+    const shortErrors = dependencyGraph.validateGraph(shortGraph);
+    const longErrors = dependencyGraph.validateGraph(longGraph);
+
+    expect(shortErrors.length).toEqual(0);
+    expect(longErrors.length).toEqual(0);
+  });
+});
 
 describe('.getRelatives', () => {
   it('should get all relatives of a simple graph', () => {

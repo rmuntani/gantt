@@ -36,7 +36,7 @@ export function findIndexWithId(id, sortedNodes) {
     index: sortedNodes.length - 1,
   };
 
-  while ((id >= min.id && id <= max.id) && (min.index + 1 < max.index)) {
+  do {
     if (id < mid.id && id > min.id) {
       max = mid;
       midIndex = Math.floor((max.index + min.index) / 2);
@@ -56,7 +56,7 @@ export function findIndexWithId(id, sortedNodes) {
     if (id === mid.id) return mid.index;
     if (id === min.id) return min.index;
     if (id === max.id) return max.index;
-  }
+  } while ((id >= min.id && id <= max.id) && (min.index + 1 < max.index));
 
   return null;
 }
@@ -180,4 +180,43 @@ export function getRelatives(id, graph) {
     newParents = currParents.filter(currParent => rootsIds.indexOf(currParent.getId()) < 0);
   }
   return roots;
+}
+
+function getNewIds(newIds, oldIds) {
+  return newIds.filter(
+    (id, index) => newIds.indexOf(id, index + 1) < 0 && oldIds.indexOf(id) < 0,
+  );
+}
+
+function validateNodesRelationship(graph) {
+  let ids = graph.map(node => node.getId());
+  let currentNodes = graph;
+  let iterations = 0;
+
+  while (currentNodes.length > 0 && iterations <= ids.length) {
+    let childNodes = currentNodes.map(node => node.children);
+    childNodes = [].concat(...childNodes);
+    const childrenIds = childNodes.map(node => node.getId());
+    const newIds = getNewIds(childrenIds, ids);
+    ids = ids.concat(...newIds);
+    currentNodes = childNodes;
+    iterations += 1;
+  }
+
+  if (iterations > ids.length) return { error: 'Graph has circular dependency' };
+
+  return null;
+}
+
+export function validateGraph(graph) {
+  const errors = [];
+
+  if (graph.length === 0 || graph === undefined) {
+    errors.push('Root is empty (a node without dependencies is probably missing)');
+  } else {
+    const relationshipErrors = validateNodesRelationship(graph);
+    if (relationshipErrors) errors.push(relationshipErrors.error);
+  }
+
+  return errors;
 }
