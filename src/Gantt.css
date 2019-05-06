@@ -8,7 +8,6 @@
 
 .chart {
     border: solid black 1px;
-    height: 500px;
     position: relative;
     width: 500px;
 }
@@ -20,5 +19,4 @@
 
 .ybar {
     border-left: 1px dashed rgb(175, 175, 175);
-    height: 500px;
 }

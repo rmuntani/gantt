@@ -14,10 +14,12 @@ describe('GanttChart', () => {
     };
 
     const chart = mount(<GanttChart data={mockData} />);
+    const chartDiv = chart.childAt(0);
 
     expect(chart.exists('GanttYAxis')).toEqual(true);
     expect(chart.exists('GanttXAxis')).toEqual(true);
     expect(chart.exists('GanttXAxis')).toEqual(true);
+    expect(chartDiv.props().style.height).toEqual('29px');
   });
 
   it('should return the right number of bars, ticks and vertical lines', () => {
@@ -31,10 +33,12 @@ describe('GanttChart', () => {
     };
 
     const chart = mount(<GanttChart data={mockData} />);
+    const chartDiv = chart.childAt(0);
     const yAxis = chart.find('GanttYAxis');
     const xAxis = chart.find('GanttXAxis');
     const bars = chart.find('GanttBar');
 
+    expect(chartDiv.props().style.height).toEqual('52px');
     expect(yAxis.children().length).toEqual(9);
     expect(xAxis.childAt(0).children().length).toEqual(11);
     expect(bars.length).toEqual(2);
@@ -352,5 +356,61 @@ describe('double-click on a bar', () => {
 
     expect(chart.find('GanttBar').length).toEqual(10);
     expect((bars.findWhere(bar => bar.key() === '1').exists())).toEqual(true);
+  });
+
+  it('should change Ybar height', () => {
+    const mockData = {
+      numTicks: 10,
+      scale: 100,
+      bars: [
+        {
+          id: 1, dependencies: [], duration: 10, start: 0,
+        },
+        {
+          id: 2, dependencies: [1], duration: 30, start: 10,
+        },
+        {
+          id: 3, dependencies: [1], duration: 15, start: 25,
+        },
+        {
+          id: 4, dependencies: [3, 2], duration: 20, start: 40,
+        },
+        {
+          id: 7, dependencies: [2], duration: 5, start: 70,
+        },
+        {
+          id: 9, dependencies: [1, 7], duration: 12, start: 25,
+        },
+        {
+          id: 17, dependencies: [], duration: 45, start: 45,
+        },
+        {
+          id: 19, dependencies: [17], duration: 10, start: 30,
+        },
+        {
+          id: 20, dependencies: [7, 3], duration: 60, start: 10,
+        },
+        {
+          id: 21, dependencies: [20, 1, 19], duration: 10, start: 0,
+        },
+      ],
+    };
+    const chart = mount(<GanttChart data={mockData} />);
+    const bars = chart.find('GanttBar');
+    const barId19 = bars.findWhere(bar => bar.key() === '19');
+    const barId19Div = barId19.find('div');
+
+    barId19Div.prop('onDoubleClick')();
+    chart.update();
+
+    const yAxis = chart.find('GanttYAxis');
+    const yBar = yAxis.children();
+
+    const height = [];
+    for (let i = 0; i < yBar.length; i += 1) {
+      height.push(yBar.get(i).props.style.height);
+    }
+
+    height.forEach(h => expect(h).toEqual('75px'));
   });
 });

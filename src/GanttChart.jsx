@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GanttBar from './GanttBar';
-import GanttYAxis from './GanttYAxis';
-import GanttXAxis from './GanttXAxis';
-import * as helpers from './helpers';
-import * as DG from './dependencyGraph';
+import GanttBar from './GanttBar.jsx';
+import GanttYAxis from './GanttYAxis.jsx';
+import GanttXAxis from './GanttXAxis.jsx';
+import * as helpers from './helpers.js';
+import * as DG from './dependencyGraph.js';
 
 class GanttChart extends Component {
   constructor(props) {
@@ -37,6 +37,12 @@ class GanttChart extends Component {
         );
       },
     );
+  }
+
+  getChartHeight() {
+    const { graph } = this.state;
+    const bars = DG.flattenGraph(graph);
+    return `${bars.length * 23 + 6}px`;
   }
 
   isValidBar(bar, index) {
@@ -104,8 +110,14 @@ class GanttChart extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="chart">
-          <GanttYAxis numTicks={this.numTicks} />
+        <div
+          className="chart"
+          style={{ height: this.getChartHeight() }}
+        >
+          <GanttYAxis
+            numTicks={this.numTicks}
+            height={this.getChartHeight()}
+          />
           {this.getBars()}
         </div>
         <GanttXAxis

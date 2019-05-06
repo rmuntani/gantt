@@ -5,6 +5,16 @@ class GanttYAxis extends Component {
   constructor(props) {
     super(props);
     this.numTicks = props.numTicks;
+    this.height = props.height;
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.height !== this.height) {
+      this.height = nextProps.height;
+      return true;
+    }
+
+    return false;
   }
 
   getLeft(i) {
@@ -18,6 +28,7 @@ class GanttYAxis extends Component {
       ticks.push(<div
         style={
           {
+            height: this.height,
             left: this.getLeft(i),
             position: 'absolute',
           }
@@ -37,6 +48,7 @@ class GanttYAxis extends Component {
 
 GanttYAxis.propTypes = {
   numTicks: PropTypes.number.isRequired,
+  height: PropTypes.string.isRequired,
 };
 
 export default GanttYAxis;
