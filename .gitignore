@@ -4,3 +4,4 @@ node_modules
 TODOS
 .package*
 script/clean
+bash

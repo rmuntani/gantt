@@ -1,3 +1,5 @@
+import { messages } from './gantt.config';
+
 class DependencyGraph {
   constructor(value) {
     this.node = value;
@@ -203,7 +205,7 @@ function validateNodesRelationship(graph) {
     iterations += 1;
   }
 
-  if (iterations > ids.length) return { error: 'Graph has circular dependency' };
+  if (iterations > ids.length) return { error: messages.circularDependency };
 
   return null;
 }
@@ -212,7 +214,7 @@ export function validateGraph(graph) {
   const errors = [];
 
   if (graph.length === 0 || graph === undefined) {
-    errors.push('Root is empty (a node without dependencies is probably missing)');
+    errors.push(messages.emptyRoot);
   } else {
     const relationshipErrors = validateNodesRelationship(graph);
     if (relationshipErrors) errors.push(relationshipErrors.error);

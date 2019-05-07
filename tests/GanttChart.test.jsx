@@ -2,6 +2,7 @@ import { mount, shallow } from 'enzyme';
 
 import React from 'react';
 import GanttChart from '../src/GanttChart';
+import { config } from '../src/gantt.config';
 
 describe('GanttChart', () => {
   it('should return the chart with bars, scale and vertical lines', () => {
@@ -15,11 +16,12 @@ describe('GanttChart', () => {
 
     const chart = mount(<GanttChart data={mockData} />);
     const chartDiv = chart.find('div.chart');
+    const height = (config.barHeight + config.barMargin) * 1 + 2 * config.barMargin;
 
     expect(chart.exists('GanttYAxis')).toEqual(true);
     expect(chart.exists('GanttXAxis')).toEqual(true);
     expect(chart.exists('GanttXAxis')).toEqual(true);
-    expect(chartDiv.props().style.height).toEqual('29px');
+    expect(chartDiv.props().style.height).toEqual(`${height}px`);
   });
 
   it('should return the right number of bars, ticks and vertical lines', () => {
@@ -37,8 +39,9 @@ describe('GanttChart', () => {
     const yAxis = chart.find('GanttYAxis');
     const xAxis = chart.find('GanttXAxis');
     const bars = chart.find('GanttBar');
+    const height = (config.barHeight + config.barMargin) * 2 + 2 * config.barMargin;
 
-    expect(chartDiv.props().style.height).toEqual('52px');
+    expect(chartDiv.props().style.height).toEqual(`${height}px`);
     expect(yAxis.children().length).toEqual(9);
     expect(xAxis.childAt(0).children().length).toEqual(11);
     expect(bars.length).toEqual(2);
@@ -58,7 +61,7 @@ describe('GanttChart', () => {
     const errors = errorsList.find('li');
 
     expect(errors.length).toEqual(1);
-    expect(errors.text()).toEqual('Bar 1 start must be a positive number');
+    expect(errors.text()).toEqual('Bar 1 Start must be a positive number');
   });
 
   it('should show the activities names', () => {
@@ -341,7 +344,7 @@ describe('GanttChart.isDataValid', () => {
 
       const gc = new GanttChart({ data: mockData });
       expect(gc.isDataValid()).toEqual(false);
-      expect(gc.errors).toContain('Bar 1 start is necessary to draw the chart');
+      expect(gc.errors).toContain('Bar 1 Start is necessary to draw the chart');
     });
     it('when bar has no duration', () => {
       const mockData = {
@@ -364,7 +367,7 @@ describe('GanttChart.isDataValid', () => {
 
       const gc = new GanttChart({ data: mockData });
       expect(gc.isDataValid()).toEqual(false);
-      expect(gc.errors).toContain('Bar 1 start must be a positive number');
+      expect(gc.errors).toContain('Bar 1 Start must be a positive number');
     });
     it('when duration is negative', () => {
       const mockData = {
@@ -570,12 +573,13 @@ describe('double-click on a bar', () => {
 
     const yAxis = chart.find('GanttYAxis');
     const yBar = yAxis.children();
+    const expectedHeight = (config.barHeight + config.barMargin) * 3 + 2 * config.barMargin;
 
     const height = [];
     for (let i = 0; i < yBar.length; i += 1) {
       height.push(yBar.get(i).props.style.height);
     }
 
-    height.forEach(h => expect(h).toEqual('75px'));
+    height.forEach(h => expect(h).toEqual(`${expectedHeight}px`));
   });
 });

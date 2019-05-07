@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as helpers from './helpers';
+import { config } from './gantt.config';
 
 class GanttXAxis extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class GanttXAxis extends Component {
 
     return (
       <div
-        style={{ width: '500px' }}
+        style={{ width: config.chartWidth }}
       >
         {ticks}
       </div>

@@ -5,6 +5,7 @@ import GanttYAxis from './GanttYAxis.jsx';
 import GanttXAxis from './GanttXAxis.jsx';
 import * as helpers from './helpers.js';
 import * as DG from './dependencyGraph.js';
+import { config, messages } from './gantt.config';
 
 class GanttChart extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class GanttChart extends Component {
   getChartHeight() {
     const { graph } = this.state;
     const bars = DG.flattenGraph(graph);
-    return `${bars.length * 23 + 6}px`;
+    return `${bars.length * (config.barHeight + config.barMargin) + 2 * config.barMargin}px`;
   }
 
   getNamesList() {
@@ -51,21 +52,23 @@ class GanttChart extends Component {
       node => <div key={node.id} className="name">{node.name}</div>,
     );
     return (
-      <div style={{ width: '100px', float: 'left' }}>{listItens}</div>
+      <div style={{ width: `${config.nameWidth}px`, float: 'left' }}>{listItens}</div>
     );
   }
 
   isValidBar(bar, index) {
-    const validStart = this.isValidQuantity(bar.start, `Bar ${(index + 1)} start`);
-    const validDuration = this.isValidQuantity(bar.duration, `Bar ${(index + 1)} duration`);
-    const validId = this.isIdValid(bar.id, `Bar ${(index + 1)}`);
+    const validStart = this.isValidQuantity(bar.start,
+      `${messages.bar} ${(index + 1)} ${messages.start}`);
+    const validDuration = this.isValidQuantity(bar.duration,
+      `${messages.bar} ${(index + 1)} ${messages.duration}`);
+    const validId = this.isIdValid(bar.id, `${messages.bar} ${(index + 1)}`);
 
     return validStart && validDuration && validId;
   }
 
   isIdValid(id, name) {
     if (helpers.isInvalidValue(id)) {
-      this.errors.push(`${name} id must be a number/string`);
+      this.errors.push(`${name} ${messages.numericId}`);
       return false;
     }
 
@@ -75,10 +78,10 @@ class GanttChart extends Component {
   isValidQuantity(value, name) {
     let validQuantity = true;
     if (helpers.isInvalidValue(value)) {
-      this.errors.push(`${name} is necessary to draw the chart`);
+      this.errors.push(`${name} ${messages.required}`);
       validQuantity = false;
     } else if (!helpers.isNumeric(value) || value < 0) {
-      this.errors.push(`${name} must be a positive number`);
+      this.errors.push(`${name} ${messages.positiveNumber}`);
       validQuantity = false;
     }
 
@@ -90,8 +93,8 @@ class GanttChart extends Component {
     const graphValidationErrors = DG.validateGraph(graph);
     this.errors = [];
 
-    this.isValidQuantity(this.scale, 'Scale');
-    this.isValidQuantity(this.numTicks, 'Number of ticks');
+    this.isValidQuantity(this.scale, messages.scale);
+    this.isValidQuantity(this.numTicks, messages.numTicks);
 
     if (graphValidationErrors.length === 0) {
       DG.flattenGraph(graph)
@@ -123,7 +126,7 @@ class GanttChart extends Component {
     return (
       <React.Fragment>
         {this.getNamesList()}
-        <div style={{ marginLeft: '100px' }}>
+        <div style={{ marginLeft: `${config.nameWidth}px` }}>
           <div
             className="chart"
             style={{ height: this.getChartHeight() }}
