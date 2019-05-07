@@ -14,7 +14,7 @@ describe('GanttChart', () => {
     };
 
     const chart = mount(<GanttChart data={mockData} />);
-    const chartDiv = chart.childAt(0);
+    const chartDiv = chart.find('div.chart');
 
     expect(chart.exists('GanttYAxis')).toEqual(true);
     expect(chart.exists('GanttXAxis')).toEqual(true);
@@ -33,7 +33,7 @@ describe('GanttChart', () => {
     };
 
     const chart = mount(<GanttChart data={mockData} />);
-    const chartDiv = chart.childAt(0);
+    const chartDiv = chart.find('div.chart');
     const yAxis = chart.find('GanttYAxis');
     const xAxis = chart.find('GanttXAxis');
     const bars = chart.find('GanttBar');
@@ -59,6 +59,43 @@ describe('GanttChart', () => {
 
     expect(errors.length).toEqual(1);
     expect(errors.text()).toEqual('Bar 1 start must be a positive number');
+  });
+
+  it('should show the activities names', () => {
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [{
+        start: 10,
+        duration: 20,
+        id: 1,
+        dependencies: [],
+        name: 'Draw a cat',
+      },
+      {
+        start: 17,
+        duration: 25,
+        id: 2,
+        dependencies: [1],
+        name: 'Paint the cat',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 3,
+        dependencies: [2],
+        name: 'Sell the painting',
+      }],
+    };
+
+    const chart = mount(<GanttChart data={mockData} />);
+    const activities = chart.find('div.name');
+    const activitiesText = activities.map(activity => activity.text());
+
+    expect(activities.length).toEqual(3);
+    expect(activitiesText).toEqual(expect.arrayContaining([
+      'Draw a cat', 'Paint the cat', 'Sell the painting',
+    ]));
   });
 });
 
@@ -116,6 +153,68 @@ describe('GanttChart.getBars', () => {
 
     expect(thirdBar.props.style.marginLeft).toEqual('33%');
     expect(thirdBar.props.style.width).toEqual('4%');
+  });
+});
+
+describe('GanttChart.getNamesList', () => {
+  it('should return bars names inside divs', () => {
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [{
+        start: 10,
+        duration: 20,
+        id: 1,
+        dependencies: [],
+        name: 'Draw a cat',
+      },
+      {
+        start: 17,
+        duration: 25,
+        id: 2,
+        dependencies: [1],
+        name: 'Paint the cat',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 3,
+        dependencies: [2],
+        name: 'Sell the painting',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 4,
+        dependencies: [],
+        name: 'Adopt a dog',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 5,
+        dependencies: [4],
+        name: 'Bath the dog',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 6,
+        dependencies: [5],
+        name: 'Pet the dog',
+      },
+      ],
+    };
+
+    const gc = new GanttChart({ data: mockData });
+    const names = mount(gc.getNamesList()).find('div.name');
+    const namesText = names.map(name => name.text());
+
+    expect(names.length).toEqual(6);
+    expect(namesText).toEqual(expect.arrayContaining([
+      'Draw a cat', 'Paint the cat', 'Sell the painting',
+      'Adopt a dog', 'Bath the dog', 'Pet the dog',
+    ]));
   });
 });
 
@@ -306,7 +405,7 @@ describe('double-click on a bar', () => {
         },
         {
           id: 3, dependencies: [2], duration: 15, start: 25,
-        }
+        },
       ],
     };
     const chart = mount(<GanttChart data={mockData} />);

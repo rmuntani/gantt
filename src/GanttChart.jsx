@@ -45,6 +45,16 @@ class GanttChart extends Component {
     return `${bars.length * 23 + 6}px`;
   }
 
+  getNamesList() {
+    const { graph } = this.state;
+    const listItens = DG.flattenGraph(graph).map(
+      node => <div key={node.id} className="name">{node.name}</div>,
+    );
+    return (
+      <div style={{ width: '100px', float: 'left' }}>{listItens}</div>
+    );
+  }
+
   isValidBar(bar, index) {
     const validStart = this.isValidQuantity(bar.start, `Bar ${(index + 1)} start`);
     const validDuration = this.isValidQuantity(bar.duration, `Bar ${(index + 1)} duration`);
@@ -112,20 +122,23 @@ class GanttChart extends Component {
   renderChart() {
     return (
       <React.Fragment>
-        <div
-          className="chart"
-          style={{ height: this.getChartHeight() }}
-        >
-          <GanttYAxis
+        {this.getNamesList()}
+        <div style={{ marginLeft: '100px' }}>
+          <div
+            className="chart"
+            style={{ height: this.getChartHeight() }}
+          >
+            <GanttYAxis
+              numTicks={this.numTicks}
+              height={this.getChartHeight()}
+            />
+            {this.getBars()}
+          </div>
+          <GanttXAxis
+            scale={this.scale}
             numTicks={this.numTicks}
-            height={this.getChartHeight()}
           />
-          {this.getBars()}
         </div>
-        <GanttXAxis
-          scale={this.scale}
-          numTicks={this.numTicks}
-        />
       </React.Fragment>
     );
   }
@@ -155,6 +168,7 @@ GanttChart.propTypes = {
         dependencies: PropTypes.arrayOf(PropTypes.number),
         duration: PropTypes.number,
         id: PropTypes.number,
+        name: PropTypes.string,
         start: PropTypes.number,
       }),
     ),
