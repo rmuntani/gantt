@@ -28,6 +28,37 @@ describe('.findIndexWithId', () => {
   });
 });
 
+describe('.findNode', () => {
+  const values = [{ id: 1, dependencies: [] },
+    { id: 2, dependencies: [] },
+    { id: 3, dependencies: [1, 2] },
+    { id: 4, dependencies: [2] },
+    { id: 7, dependencies: [4, 1] },
+    { id: 9, dependencies: [7] },
+    { id: 17, dependencies: [] },
+    { id: 19, dependencies: [17] },
+    { id: 20, dependencies: [7, 3] },
+    { id: 21, dependencies: [20, 1, 19] }];
+  const graph = dependencyGraph.buildGraph(values);
+
+  it('should return the existing nodes', () => {
+    expect(dependencyGraph.findNode(2, graph).getId()).toEqual(2);
+    expect(dependencyGraph.findNode(7, graph).getId()).toEqual(7);
+    expect(dependencyGraph.findNode(9, graph).getId()).toEqual(9);
+    expect(dependencyGraph.findNode(17, graph).getId()).toEqual(17);
+    expect(dependencyGraph.findNode(20, graph).getId()).toEqual(20);
+    expect(dependencyGraph.findNode(21, graph).getId()).toEqual(21);
+  });
+
+  it('should return null for nodes that do not exist', () => {
+    expect(dependencyGraph.findNode(0, graph)).toEqual(null);
+    expect(dependencyGraph.findNode(5, graph)).toEqual(null);
+    expect(dependencyGraph.findNode(6, graph)).toEqual(null);
+    expect(dependencyGraph.findNode(8, graph)).toEqual(null);
+    expect(dependencyGraph.findNode(22, graph)).toEqual(null);
+  });
+});
+
 describe('.buildGraph', () => {
   it('should build a graph with roots only', () => {
     const nodes = [{ id: 1, dependencies: [] },

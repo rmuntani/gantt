@@ -293,6 +293,34 @@ describe('GanttChart.isDataValid', () => {
 });
 
 describe('double-click on a bar', () => {
+  it('should not change when graph has only one \'family\'', () => {
+    const mockData = {
+      numTicks: 10,
+      scale: 100,
+      bars: [
+        {
+          id: 1, dependencies: [], duration: 10, start: 0,
+        },
+        {
+          id: 2, dependencies: [1], duration: 30, start: 10,
+        },
+        {
+          id: 3, dependencies: [2], duration: 15, start: 25,
+        }
+      ],
+    };
+    const chart = mount(<GanttChart data={mockData} />);
+    let bars = chart.find('GanttBar');
+    const barId1 = bars.findWhere(bar => bar.key() === '1');
+    const barId1Div = barId1.find('div');
+
+    barId1Div.prop('onDoubleClick')();
+    chart.update();
+    bars = chart.find('GanttBar');
+
+    expect(bars.length).toEqual(3);
+  });
+
   it('should show only relatives of the clicked node', () => {
     const mockData = {
       numTicks: 10,

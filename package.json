@@ -2,8 +2,10 @@
   "name": "gantt",
   "version": "0.1.0",
   "jest": {
+    "collectCoverage": true,
     "collectCoverageFrom": [
-      "./src"
+      "./src/**",
+      "!./src/index.js"
     ],
     "roots": [
       "./tests"

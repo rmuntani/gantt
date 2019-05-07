@@ -134,7 +134,7 @@ class GanttChart extends Component {
     return (
       <React.Fragment>
         <ul>
-          {this.errors.map(error => <li>{error}</li>)}
+          {this.errors.map((error, index) => <li key={index}>{error}</li>)}
         </ul>
       </React.Fragment>
     );
