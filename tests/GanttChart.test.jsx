@@ -43,6 +43,23 @@ describe('GanttChart', () => {
     expect(xAxis.childAt(0).children().length).toEqual(11);
     expect(bars.length).toEqual(2);
   });
+
+  it('should return error when bad data is used', () => {
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [
+        { start: -100, duration: 20, id: 0 },
+        { start: 50, duration: 30, id: 1 },
+      ],
+    };
+
+    const errorsList = mount(<GanttChart data={mockData} />);
+    const errors = errorsList.find('li');
+
+    expect(errors.length).toEqual(1);
+    expect(errors.text()).toEqual('Bar 1 start must be a positive number');
+  });
 });
 
 describe('GanttChart.getBars', () => {
@@ -104,17 +121,6 @@ describe('GanttChart.getBars', () => {
 
 describe('GanttChart.isDataValid', () => {
   describe('true', () => {
-    it('when there is no bar data', () => {
-      const mockData = {
-        scale: 100,
-        numTicks: 10,
-        bars: [],
-      };
-
-      const gc = new GanttChart({ data: mockData });
-      expect(gc.isDataValid()).toEqual(true);
-    });
-
     it('when there is one valid bar', () => {
       const mockData = {
         scale: 100,
@@ -141,6 +147,38 @@ describe('GanttChart.isDataValid', () => {
   });
 
   describe('false', () => {
+    it('when there is no bar data', () => {
+      const mockData = {
+        scale: 100,
+        numTicks: 10,
+        bars: [],
+      };
+
+      const gc = new GanttChart({ data: mockData });
+      expect(gc.isDataValid()).toEqual(false);
+      expect(gc.errors).toContain('Root is empty (a node without dependencies is probably missing)');
+    });
+
+    it('when bars have circular dependency', () => {
+      const mockData = {
+        scale: 100,
+        numTicks: 10,
+        bars: [{
+          start: 10, duration: 20, id: 1, dependencies: [],
+        },
+        {
+          start: 17, duration: 25, id: 2, dependencies: [3, 1],
+        },
+        {
+          start: 33, duration: 4, id: 3, dependencies: [2],
+        }],
+      };
+
+      const gc = new GanttChart({ data: mockData });
+      expect(gc.isDataValid()).toEqual(false);
+      expect(gc.errors).toContain('Graph has circular dependency');
+    });
+
     it('when there is no scale', () => {
       const mockData = {
         numTicks: 10,

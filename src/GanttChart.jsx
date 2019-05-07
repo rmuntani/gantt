@@ -77,18 +77,20 @@ class GanttChart extends Component {
 
   isDataValid() {
     const { graph } = this.state;
+    const graphValidationErrors = DG.validateGraph(graph);
     this.errors = [];
 
     this.isValidQuantity(this.scale, 'Scale');
     this.isValidQuantity(this.numTicks, 'Number of ticks');
-    DG.flattenGraph(graph)
-      .reduce(
-        (acc, bar, index) => acc && this.isValidBar(bar, index), true,
-      );
 
-    if (this.errors.length === 0) return true;
+    if (graphValidationErrors.length === 0) {
+      DG.flattenGraph(graph)
+        .reduce(
+          (acc, bar, index) => acc && this.isValidBar(bar, index), true,
+        );
+    } else graphValidationErrors.forEach(error => this.errors.push(error));
 
-    return false;
+    return this.errors.length === 0;
   }
 
   showRelatives(id) {
@@ -107,7 +109,7 @@ class GanttChart extends Component {
     );
   }
 
-  render() {
+  renderChart() {
     return (
       <React.Fragment>
         <div
@@ -126,6 +128,23 @@ class GanttChart extends Component {
         />
       </React.Fragment>
     );
+  }
+
+  renderError() {
+    return (
+      <React.Fragment>
+        <ul>
+          {this.errors.map(error => <li>{error}</li>)}
+        </ul>
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    if (this.isDataValid()) {
+      return this.renderChart();
+    }
+    return this.renderError();
   }
 }
 
