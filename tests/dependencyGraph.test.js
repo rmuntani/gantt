@@ -493,3 +493,35 @@ describe('.getRelatives', () => {
       .toEqual(expectedDataId21.sort(orderById));
   });
 });
+
+describe('.propagateAttributeToRelatives', () => {
+  it('propagates the attributes on a complex tree with multiple roots', () => {
+    const values = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [1] },
+      { id: 4, dependencies: [3, 2] },
+      { id: 7, dependencies: [2] },
+      { id: 9, dependencies: [1, 7] },
+      { id: 17, dependencies: [] },
+      { id: 19, dependencies: [17] },
+      { id: 20, dependencies: [7, 3] },
+      { id: 21, dependencies: [20, 1, 19] }];
+    const graph = dependencyGraph.buildGraph(values);
+    const propagatedGraph = dependencyGraph.propagateAttributeToRelatives(19, graph, { class: 'show' });
+    const expectedDataId19 = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [1] },
+      { id: 4, dependencies: [3, 2] },
+      { id: 7, dependencies: [2] },
+      { id: 9, dependencies: [1, 7] },
+      { id: 17, dependencies: [], attributes: { class: 'show' } },
+      { id: 19, dependencies: [17], attributes: { class: 'show' } },
+      { id: 20, dependencies: [7, 3] },
+      { id: 21, dependencies: [20, 1, 19], attributes: { class: 'show' } }];
+
+    console.log(dependencyGraph.flattenGraph(propagatedGraph));
+    expect(dependencyGraph.flattenGraph(propagatedGraph).sort(orderById)).toEqual(
+      expect.arrayContaining(expectedDataId19.sort(orderById)),
+    );
+  });
+});

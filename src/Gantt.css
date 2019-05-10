@@ -4,12 +4,14 @@
     height: 20px;
     margin-top:3px;
     margin-bottom:3px;
+    transition : height .5s ease-out, opacity .5s ease-in;
 }
 
 .chart {
     border: solid black 1px;
     position: relative;
     width: 500px;
+    transition: height .5s;
 }
 
 .tick {
@@ -19,10 +21,12 @@
 
 .ybar {
     border-left: 1px dashed rgb(175, 175, 175);
+    transition: height .5s;
 }
 
 .name {
     height: 20px;
     margin-top:3px;
     margin-bottom:3px;
+    transition : height .5s ease-out, opacity .5s ease-in;
 }

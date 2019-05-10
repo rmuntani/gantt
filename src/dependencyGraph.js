@@ -20,6 +20,15 @@ class DependencyGraph {
     const { id } = this.node;
     return id;
   }
+
+  getAttributes() {
+    const { attributes } = this.node;
+    if (attributes !== undefined) {
+      return attributes;
+    }
+
+    return [];
+  }
 }
 
 function orderById(nodes) {
@@ -221,4 +230,30 @@ export function validateGraph(graph) {
   }
 
   return errors;
+}
+
+export function propagateAttributeToRelatives(id, graph, attribute) {
+  const nodeWithId = findNode(id, graph);
+  const allowedIds = getRelatedIds(nodeWithId);
+  const flattenedGraph = flattenGraph(graph);
+  const propagatedValues = flattenedGraph.map(node => {
+    if ( allowedIds.indexOf(node.id)>=0 ) {
+      node['attributes'] = attribute;
+    }
+    return node;
+  });
+  const propagatedGraph = buildGraph(propagatedValues);
+
+  return propagatedGraph;
+}
+
+export function propagateAttributeToAll(graph, attribute) {
+  const flattenedGraph = flattenGraph(graph);
+  const propagatedValues = flattenedGraph.map(node => {
+    node['attributes'] = attribute;
+    return node;
+  });
+  const propagatedGraph = buildGraph(propagatedValues);
+
+  return propagatedGraph;
 }

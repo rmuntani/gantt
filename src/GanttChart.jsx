@@ -34,6 +34,7 @@ class GanttChart extends Component {
             id={id}
             key={id}
             onDoubleClick={this.showRelatives}
+            style={bar.attributes}
           />
         );
       },
@@ -49,7 +50,7 @@ class GanttChart extends Component {
   getNamesList() {
     const { graph } = this.state;
     const listItens = DG.flattenGraph(graph).map(
-      node => <div key={node.id} className="name">{node.name}</div>,
+      node => <div key={node.id} className="name" style={node.attributes}>{node.name}</div>,
     );
     return (
       <div style={{ width: `${config.nameWidth}px`, float: 'left' }}>{listItens}</div>
@@ -109,11 +110,17 @@ class GanttChart extends Component {
   showRelatives(id) {
     const { showFamily } = this.state;
     let currGraph;
+    let finalGraph;
+
     if (!showFamily) {
-      currGraph = DG.getRelatives(id, this.originalGraph);
+      currGraph = DG.propagateAttributeToAll(this.originalGraph, { opacity: 0, height: '0px', overflow: 'hidden' });
+      currGraph = DG.propagateAttributeToRelatives(id,currGraph, { opacity: 1, height: `${config.barHeight}px`  });
+      finalGraph = DG.getRelatives(id, this.originalGraph);
     } else {
-      currGraph = this.originalGraph;
+      currGraph = DG.propagateAttributeToAll(this.originalGraph, { opacity: 1, height: `${config.barHeight}px`  });
+      finalGraph = this.originalGraph;
     }
+    setTimeout(() => this.setState({graph: finalGraph}),0);
     this.setState(
       state => ({
         showFamily: !state.showFamily,
