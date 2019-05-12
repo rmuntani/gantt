@@ -20,15 +20,6 @@ class DependencyGraph {
     const { id } = this.node;
     return id;
   }
-
-  getAttributes() {
-    const { attributes } = this.node;
-    if (attributes !== undefined) {
-      return attributes;
-    }
-
-    return [];
-  }
 }
 
 function orderById(nodes) {
@@ -129,7 +120,7 @@ export function flattenGraph(roots) {
     notDuplicated.forEach(newNode => flattenedGraph.push(newNode.node));
     newNodes = currChildren;
   }
-  return flattenedGraph;
+  return orderById(flattenedGraph);
 }
 
 function duplicateGraph(graph) {
@@ -236,9 +227,9 @@ export function propagateAttributeToRelatives(id, graph, attribute) {
   const nodeWithId = findNode(id, graph);
   const allowedIds = getRelatedIds(nodeWithId);
   const flattenedGraph = flattenGraph(graph);
-  const propagatedValues = flattenedGraph.map(node => {
-    if ( allowedIds.indexOf(node.id)>=0 ) {
-      node['attributes'] = attribute;
+  const propagatedValues = flattenedGraph.map((node) => {
+    if (allowedIds.indexOf(node.id) >= 0) {
+      return { ...node, attributes: attribute };
     }
     return node;
   });
@@ -249,10 +240,7 @@ export function propagateAttributeToRelatives(id, graph, attribute) {
 
 export function propagateAttributeToAll(graph, attribute) {
   const flattenedGraph = flattenGraph(graph);
-  const propagatedValues = flattenedGraph.map(node => {
-    node['attributes'] = attribute;
-    return node;
-  });
+  const propagatedValues = flattenedGraph.map(node => ({ ...node, attributes: attribute }));
   const propagatedGraph = buildGraph(propagatedValues);
 
   return propagatedGraph;

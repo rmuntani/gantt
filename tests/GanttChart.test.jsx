@@ -469,10 +469,10 @@ describe('double-click on a bar', () => {
     chart.update();
     bars = chart.find('GanttBar');
 
-    expect((bars.findWhere(bar => bar.key() === '1').exists())).toEqual(false);
-    expect((bars.findWhere(bar => bar.key() === '17').exists())).toEqual(true);
-    expect((bars.findWhere(bar => bar.key() === '19').exists())).toEqual(true);
-    expect((bars.findWhere(bar => bar.key() === '21').exists())).toEqual(true);
+    expect(bars.findWhere(bar => bar.key() === '1').props().style.opacity).toEqual(0);
+    expect(bars.findWhere(bar => bar.key() === '17').props().style.opacity).toEqual(1);
+    expect(bars.findWhere(bar => bar.key() === '19').props().style.opacity).toEqual(1);
+    expect(bars.findWhere(bar => bar.key() === '21').props().style.opacity).toEqual(1);
   });
 
   it('should show the full tree when a bar is doubleclicked twice', () => {
@@ -523,7 +523,6 @@ describe('double-click on a bar', () => {
     chart.update();
 
     expect(chart.find('GanttBar').length).toEqual(10);
-    expect((bars.findWhere(bar => bar.key() === '1').exists())).toEqual(true);
   });
 
   it('should change Ybar height', () => {

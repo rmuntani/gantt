@@ -519,7 +519,6 @@ describe('.propagateAttributeToRelatives', () => {
       { id: 20, dependencies: [7, 3] },
       { id: 21, dependencies: [20, 1, 19], attributes: { class: 'show' } }];
 
-    console.log(dependencyGraph.flattenGraph(propagatedGraph));
     expect(dependencyGraph.flattenGraph(propagatedGraph).sort(orderById)).toEqual(
       expect.arrayContaining(expectedDataId19.sort(orderById)),
     );

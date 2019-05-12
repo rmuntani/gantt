@@ -12,6 +12,14 @@ class GanttBar extends Component {
     this.duration = props.duration;
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.style !== this.externalStyle) {
+      this.externalStyle = nextProps.style;
+    }
+
+    return true;
+  }
+
   getMarginLeft() {
     return `${this.start / this.scale * 100}%`;
   }
@@ -33,14 +41,6 @@ class GanttBar extends Component {
     return `${this.duration / this.scale * 100}%`;
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.style !== this.externalStyle) {
-      this.externalStyle = nextProps.style;
-      return true;
-    }
-
-    return false;
-  }
 
   render() {
     const barId = this.id;
@@ -60,11 +60,13 @@ GanttBar.propTypes = {
   onDoubleClick: PropTypes.func,
   scale: PropTypes.number.isRequired,
   start: PropTypes.number.isRequired,
+  style: PropTypes.object,
 };
 
 GanttBar.defaultProps = {
   id: null,
   onDoubleClick: null,
+  style: { },
 };
 
 export default GanttBar;

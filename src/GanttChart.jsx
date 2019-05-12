@@ -43,7 +43,9 @@ class GanttChart extends Component {
 
   getChartHeight() {
     const { graph } = this.state;
-    const bars = DG.flattenGraph(graph);
+    const bars = DG.flattenGraph(graph).filter(
+      node => node.attributes === undefined || (node.attributes && node.attributes.height !== '0px'),
+    );
     return `${bars.length * (config.barHeight + config.barMargin) + 2 * config.barMargin}px`;
   }
 
@@ -109,18 +111,26 @@ class GanttChart extends Component {
 
   showRelatives(id) {
     const { showFamily } = this.state;
+    const removeNodes = {
+      opacity: 0,
+      height: '0px',
+      marginTop: '0px',
+      marginBottom: '0px',
+      border: 'none',
+    };
+    const insertNodes = {
+      opacity: 1,
+      height: `${config.barHeight}px`,
+    };
+
     let currGraph;
-    let finalGraph;
 
     if (!showFamily) {
-      currGraph = DG.propagateAttributeToAll(this.originalGraph, { opacity: 0, height: '0px', overflow: 'hidden' });
-      currGraph = DG.propagateAttributeToRelatives(id,currGraph, { opacity: 1, height: `${config.barHeight}px`  });
-      finalGraph = DG.getRelatives(id, this.originalGraph);
+      currGraph = DG.propagateAttributeToAll(this.originalGraph, removeNodes);
+      currGraph = DG.propagateAttributeToRelatives(id, currGraph, insertNodes);
     } else {
-      currGraph = DG.propagateAttributeToAll(this.originalGraph, { opacity: 1, height: `${config.barHeight}px`  });
-      finalGraph = this.originalGraph;
+      currGraph = DG.propagateAttributeToAll(this.originalGraph, insertNodes);
     }
-    setTimeout(() => this.setState({graph: finalGraph}),0);
     this.setState(
       state => ({
         showFamily: !state.showFamily,
