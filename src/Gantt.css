@@ -31,3 +31,19 @@
     transition : height .5s;
 }
 
+.details {
+    background-color: rgb(252, 252, 252);
+    border: solid gray 1px;
+    border-radius: 20px;
+    color: rgb(0, 100, 255);
+    line-height: 1;
+    margin: 0px;
+    opacity: .8;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+}
+
+div.details p {
+    margin: 0px;
+}
