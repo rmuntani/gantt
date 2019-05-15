@@ -1,4 +1,5 @@
 import * as dependencyGraph from '../src/dependencyGraph';
+import * as helpers from '../src/helpers';
 
 function orderById(a, b) {
   return a.id - b.id;
@@ -522,5 +523,23 @@ describe('.propagateAttributeToRelatives', () => {
     expect(dependencyGraph.flattenGraph(propagatedGraph).sort(orderById)).toEqual(
       expect.arrayContaining(expectedDataId19.sort(orderById)),
     );
+  });
+});
+
+describe('.propagateColor', () => {
+  it('should propagate colors to the child nodes on a simple tree', () => {
+    helpers.generateColor = jest.fn().mockReturnValue('rgb(255,0,0)');
+    const values = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [1] }];
+    const graph = dependencyGraph.buildGraph(values);
+    const coloredGraph = dependencyGraph.propagateColor(graph);
+    const nodesColors = dependencyGraph.flattenGraph(coloredGraph).map((node) => node.color);
+
+    expect(nodesColors).toEqual([['rgb(255,0,0)'], ['rgb(255,0,0)'], ['rgb(255,0,0)']]);
+  });
+
+  it('should propagate colors to nodes on multiple simple trees', () => {
+    throw( new Error('not implemented'))
   });
 });

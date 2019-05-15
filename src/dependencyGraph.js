@@ -1,4 +1,5 @@
 import { messages } from './gantt.config';
+import { generateColor } from './helpers';
 
 class DependencyGraph {
   constructor(value) {
@@ -236,6 +237,32 @@ export function propagateAttributeToRelatives(id, graph, attribute) {
   const propagatedGraph = buildGraph(propagatedValues);
 
   return propagatedGraph;
+}
+
+export function propagateColor(graph) {
+  const coloredGraph = duplicateGraph(graph);
+
+  for (let i = 0; i < coloredGraph.length; i += 1) {
+    const color = generateColor();
+    let children = coloredGraph[i].children;
+    coloredGraph[i].node.color = [color];
+
+    while ( children.length != 0 ) {
+      const newChildren = [];
+      console.log(children);
+      for(let j = 0; j < children.length; j += 1) {
+        if ( children[j].node.color === undefined ) children[j].node.color = [color];
+        else if ( children[j].node.color.indexOf(color) < 0 ) children[j].node.color.push(color);
+
+        if (children[j] !== null) newChildren.push(children[j].children);
+      }
+
+      children = [].concat(...newChildren);
+      console.log(children);
+    }
+  }
+
+  return coloredGraph;
 }
 
 export function propagateAttributeToAll(graph, attribute) {
