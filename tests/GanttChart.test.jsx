@@ -219,6 +219,62 @@ describe('GanttChart.getNamesList', () => {
       'Adopt a dog', 'Bath the dog', 'Pet the dog',
     ]));
   });
+
+  it('should show the overflowed bars names when mouse is over', () => {
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [{
+        start: 10,
+        duration: 20,
+        id: 1,
+        dependencies: [],
+        name: 'Draw a cute and young cat',
+      },
+      ],
+    };
+
+    const gc = mount(<GanttChart data={mockData} />);
+    let name = gc.find('div.name');
+
+    name.prop('onMouseOver')();
+    gc.update();
+
+    name = gc.find('div.name');
+
+    expect(name.props().style.zIndex).toEqual(1);
+    expect(name.props().style.position).toEqual('relative');
+    expect(name.props().style.width).toEqual('max-content');
+  });
+
+  it('should return to normal after mouse leaves', () => {
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [{
+        start: 10,
+        duration: 20,
+        id: 1,
+        dependencies: [],
+        name: 'Draw a cute and young cat',
+      },
+      ],
+    };
+
+    const gc = mount(<GanttChart data={mockData} />);
+    let name = gc.find('div.name');
+
+    name.prop('onMouseOver')();
+    gc.update();
+
+    name = gc.find('div.name');
+    name.prop('onMouseLeave')();
+    gc.update();
+
+    name = gc.find('div.name');
+
+    expect(name.props().style.overflow).toEqual('hidden');
+  });
 });
 
 describe('GanttChart.isDataValid', () => {

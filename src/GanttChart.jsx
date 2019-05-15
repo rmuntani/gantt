@@ -16,6 +16,7 @@ class GanttChart extends Component {
     this.state = {
       graph: this.originalGraph,
       showFamily: false,
+      showName: null,
     };
     this.errors = [];
     this.showRelatives = this.showRelatives.bind(this);
@@ -50,12 +51,46 @@ class GanttChart extends Component {
   }
 
   getNamesList() {
-    const { graph } = this.state;
+    const { graph, showName } = this.state;
     const listItens = DG.flattenGraph(graph).map(
-      node => <div key={node.id} className="name" style={node.attributes}>{node.name}</div>,
+      (node) => {
+        let style;
+        if (showName === node.id) {
+          style = {
+            ...node.attributes,
+            ...{
+              backgroundColor: 'white',
+              opacity: 0.9,
+              position: 'relative',
+              width: 'max-content',
+              zIndex: 1,
+            },
+          };
+        } else {
+          style = {
+            ...node.attributes,
+            ...{
+              overflow: 'hidden',
+              width: `${config.nameWidth}px`,
+            },
+          };
+        }
+
+        return (
+          <div
+            className="name"
+            key={node.id}
+            onMouseOver={() => { this.setState(() => ({ showName: node.id })); }}
+            onMouseLeave={() => { this.setState(() => ({ showName: null })); }}
+            style={style}
+          >
+            {node.name}
+          </div>
+        );
+      },
     );
     return (
-      <div style={{ width: `${config.nameWidth}px`, float: 'left' }}>{listItens}</div>
+      <div style={{ float: 'left', marginRigth: '5px' }}>{listItens}</div>
     );
   }
 
