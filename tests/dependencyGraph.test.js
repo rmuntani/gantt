@@ -1,5 +1,4 @@
 import * as dependencyGraph from '../src/dependencyGraph';
-import * as helpers from '../src/helpers';
 
 function orderById(a, b) {
   return a.id - b.id;
@@ -9,23 +8,23 @@ function findNodeById(nodes, id) {
   return nodes.find(node => node.getId() === id);
 }
 
-describe('.findIndexWithId', () => {
+describe('.findIndexUsingId', () => {
   const nodes = [{ id: 1 }, { id: 3 }, { id: 4 }, { id: 7 }, { id: 8 }];
 
   it('should return the index of the existing numbers', () => {
-    expect(dependencyGraph.findIndexWithId(1, nodes)).toEqual(0);
-    expect(dependencyGraph.findIndexWithId(3, nodes)).toEqual(1);
-    expect(dependencyGraph.findIndexWithId(4, nodes)).toEqual(2);
-    expect(dependencyGraph.findIndexWithId(7, nodes)).toEqual(3);
-    expect(dependencyGraph.findIndexWithId(8, nodes)).toEqual(4);
+    expect(dependencyGraph.findIndexUsingId(1, nodes)).toEqual(0);
+    expect(dependencyGraph.findIndexUsingId(3, nodes)).toEqual(1);
+    expect(dependencyGraph.findIndexUsingId(4, nodes)).toEqual(2);
+    expect(dependencyGraph.findIndexUsingId(7, nodes)).toEqual(3);
+    expect(dependencyGraph.findIndexUsingId(8, nodes)).toEqual(4);
   });
 
   it('should return null for non-existing numbers', () => {
-    expect(dependencyGraph.findIndexWithId(0, nodes)).toEqual(null);
-    expect(dependencyGraph.findIndexWithId(2, nodes)).toEqual(null);
-    expect(dependencyGraph.findIndexWithId(5, nodes)).toEqual(null);
-    expect(dependencyGraph.findIndexWithId(6, nodes)).toEqual(null);
-    expect(dependencyGraph.findIndexWithId(9, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexUsingId(0, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexUsingId(2, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexUsingId(5, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexUsingId(6, nodes)).toEqual(null);
+    expect(dependencyGraph.findIndexUsingId(9, nodes)).toEqual(null);
   });
 });
 
@@ -528,18 +527,101 @@ describe('.propagateAttributeToRelatives', () => {
 
 describe('.propagateColor', () => {
   it('should propagate colors to the child nodes on a simple tree', () => {
-    helpers.generateColor = jest.fn().mockReturnValue('rgb(255,0,0)');
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
       { id: 3, dependencies: [1] }];
     const graph = dependencyGraph.buildGraph(values);
     const coloredGraph = dependencyGraph.propagateColor(graph);
-    const nodesColors = dependencyGraph.flattenGraph(coloredGraph).map((node) => node.color);
+    const { color } = coloredGraph[0].node;
+    const nodesColors = dependencyGraph.flattenGraph(coloredGraph).map(node => node.color);
 
-    expect(nodesColors).toEqual([['rgb(255,0,0)'], ['rgb(255,0,0)'], ['rgb(255,0,0)']]);
+    expect(nodesColors).toEqual([color, color, color]);
   });
 
   it('should propagate colors to nodes on multiple simple trees', () => {
-    throw( new Error('not implemented'))
+    const values = [{ id: 1, dependencies: [] },
+      { id: 2, dependencies: [1] },
+      { id: 3, dependencies: [] },
+      { id: 5, dependencies: [3] },
+      { id: 7, dependencies: [5] },
+    ];
+    const graph = dependencyGraph.buildGraph(values);
+    const coloredGraph = dependencyGraph.propagateColor(graph);
+    const firstColor = coloredGraph[0].node.color;
+    const secondColor = coloredGraph[1].node.color;
+    const coloredValues = dependencyGraph.flattenGraph(coloredGraph);
+    const expectedValues = [{ id: 1, dependencies: [], color: firstColor },
+      { id: 2, dependencies: [1], color: firstColor },
+      { id: 3, dependencies: [], color: secondColor },
+      { id: 5, dependencies: [3], color: secondColor },
+      { id: 7, dependencies: [5], color: secondColor },
+    ];
+
+    expect(coloredValues).toEqual(expectedValues);
+  });
+
+  it('should propagate color to nodes on a complex tree with multiple roots', () => {
+    const values = [{ id: 1, dependencies: [] },
+      { id: 3, dependencies: [1] },
+      { id: 7, dependencies: [3] },
+      { id: 9, dependencies: [1, 7] },
+      { id: 17, dependencies: [] },
+      { id: 19, dependencies: [17] },
+      { id: 20, dependencies: [7, 3, 17] },
+      { id: 21, dependencies: [20, 1, 19] }];
+
+    const graph = dependencyGraph.buildGraph(values);
+    const coloredGraph = dependencyGraph.propagateColor(graph);
+    const firstColor = coloredGraph[0].node.color;
+    const secondColor = coloredGraph[1].node.color;
+    const coloredValues = dependencyGraph.flattenGraph(coloredGraph);
+
+    const expectedValues = [{ id: 1, dependencies: [], color: firstColor },
+      { id: 3, dependencies: [1], color: firstColor },
+      { id: 7, dependencies: [3], color: firstColor },
+      { id: 9, dependencies: [1, 7], color: firstColor },
+      { id: 17, dependencies: [], color: secondColor },
+      { id: 19, dependencies: [17], color: secondColor },
+      { id: 20, dependencies: [7, 3, 17], color: [...firstColor, ...secondColor] },
+      { id: 21, dependencies: [20, 1, 19], color: [...firstColor, ...secondColor] }];
+
+    expect(coloredValues).toEqual(expectedValues);
+  });
+
+  it('should propagate color to nodes on a complex tree with even more roots', () => {
+    const values = [{ id: 1, dependencies: [] },
+      { id: 3, dependencies: [1] },
+      { id: 7, dependencies: [3] },
+      { id: 9, dependencies: [1, 7] },
+      { id: 17, dependencies: [] },
+      { id: 19, dependencies: [17] },
+      { id: 20, dependencies: [7, 3, 17] },
+      { id: 21, dependencies: [20, 1, 19] },
+      { id: 24, dependencies: [] },
+      { id: 25, dependencies: [9, 24] },
+      { id: 26, dependencies: [19, 24] },
+      { id: 30, dependencies: [25, 21] }];
+
+    const graph = dependencyGraph.buildGraph(values);
+    const coloredGraph = dependencyGraph.propagateColor(graph);
+    const firstColor = coloredGraph[0].node.color;
+    const secondColor = coloredGraph[1].node.color;
+    const thirdColor = coloredGraph[2].node.color;
+    const coloredValues = dependencyGraph.flattenGraph(coloredGraph);
+
+    const expectedValues = [{ id: 1, dependencies: [], color: firstColor },
+      { id: 3, dependencies: [1], color: firstColor },
+      { id: 7, dependencies: [3], color: firstColor },
+      { id: 9, dependencies: [1, 7], color: firstColor },
+      { id: 17, dependencies: [], color: secondColor },
+      { id: 19, dependencies: [17], color: secondColor },
+      { id: 20, dependencies: [7, 3, 17], color: [...firstColor, ...secondColor] },
+      { id: 21, dependencies: [20, 1, 19], color: [...firstColor, ...secondColor] },
+      { id: 24, dependencies: [], color: thirdColor },
+      { id: 25, dependencies: [9, 24], color: [...firstColor, ...thirdColor] },
+      { id: 26, dependencies: [19, 24], color: [...secondColor, ...thirdColor] },
+      { id: 30, dependencies: [25, 21], color: [...firstColor, ...secondColor, ...thirdColor] }];
+
+    expect(coloredValues).toEqual(expectedValues);
   });
 });

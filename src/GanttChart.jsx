@@ -13,6 +13,9 @@ class GanttChart extends Component {
     this.scale = props.data.scale;
     this.numTicks = props.data.numTicks;
     this.originalGraph = DG.buildGraph(props.data.bars);
+    if (DG.validateGraph(this.originalGraph).length === 0) {
+      this.originalGraph = DG.propagateColor(this.originalGraph);
+    }
     this.state = {
       graph: this.originalGraph,
       showFamily: false,
@@ -26,15 +29,13 @@ class GanttChart extends Component {
     const { graph } = this.state;
     return DG.flattenGraph(graph).map(
       (bar) => {
-        const { duration, start, id } = bar;
+        const { id } = bar;
         return (
           <GanttBar
-            scale={this.scale}
-            start={start}
-            duration={duration}
-            id={id}
+            bar={bar}
             key={id}
             onDoubleClick={this.showRelatives}
+            scale={this.scale}
             style={bar.attributes}
           />
         );

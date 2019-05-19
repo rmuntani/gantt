@@ -36,3 +36,31 @@ describe('roundNumber', () => {
     expect(helpers.roundNumber(11.92456, 4)).toEqual(11.9246);
   });
 });
+
+describe('generateColor', () => {
+  it('returns a rgb color', () => {
+    const testTimes = 10;
+
+    for (let i = 0; i < testTimes; i += 1) {
+      expect(Boolean(helpers.generateColor().match(/rgb\(\d{1,3},\d{1,3},\d{1,3}\)/))).toEqual(true);
+    }
+  });
+});
+
+describe('generateStripedBar', () => {
+  it('returns a stripedBar css', () => {
+    const singleColor = ['rgb(255,0,0)'];
+    const twoColors = ['rgb(255,0,0)', 'rgb(0,255,0)'];
+    const threeColors = ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+    const size = 20;
+    const singleStriped = 'repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) 20px)';
+    const doubleStriped = 'repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) 20px, '
+    + 'rgb(0,255,0) 20px, rgb(0,255,0) 40px)';
+    const tripleStriped = 'repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) 20px, '
+    + 'rgb(0,255,0) 20px, rgb(0,255,0) 40px, rgb(0,0,255) 40px, rgb(0,0,255) 60px)';
+
+    expect(helpers.generateStripedBar(singleColor, size)).toEqual(singleStriped);
+    expect(helpers.generateStripedBar(twoColors, size)).toEqual(doubleStriped);
+    expect(helpers.generateStripedBar(threeColors, size)).toEqual(tripleStriped);
+  });
+});

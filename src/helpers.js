@@ -11,9 +11,19 @@ export function roundNumber(num, digits) {
 }
 
 export function generateColor() {
-  const r = 255*Math.random();
-  const g = 255*Math.random();
-  const b = 255*Math.random();
+  const r = Math.round(255 * Math.random());
+  const g = Math.round(255 * Math.random());
+  const b = Math.round(255 * Math.random());
 
   return `rgb(${r},${g},${b})`;
+}
+
+export function generateStripedBar(color, size) {
+  let stripedBar = 'repeating-linear-gradient(45deg';
+  for (let i = 0; i < color.length; i += 1) {
+    stripedBar = `${stripedBar}, ${color[i]} ${size * i}px, ${color[i]} ${size * (i + 1)}px`;
+  }
+  stripedBar = `${stripedBar})`;
+
+  return stripedBar;
 }

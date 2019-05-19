@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme';
-
 import React from 'react';
 import GanttChart from '../src/GanttChart';
 import { config } from '../src/gantt.config';
+import * as helpers from '../src/helpers';
 
 describe('GanttChart', () => {
   it('should return the chart with bars, scale and vertical lines', () => {
@@ -99,6 +99,102 @@ describe('GanttChart', () => {
     expect(activitiesText).toEqual(expect.arrayContaining([
       'Draw a cat', 'Paint the cat', 'Sell the painting',
     ]));
+  });
+
+  it('should return bars with colors', () => {
+    helpers.generateColor = jest.fn();
+    helpers.generateColor.mockReturnValueOnce('rgb(255,0,0)');
+    helpers.generateColor.mockReturnValueOnce('rgb(0,255,0)');
+
+    const mockData = {
+      scale: 100,
+      numTicks: 10,
+      bars: [{
+        start: 10,
+        duration: 20,
+        id: 1,
+        dependencies: [],
+        name: 'A',
+      },
+      {
+        start: 7,
+        duration: 25,
+        id: 3,
+        dependencies: [1],
+        name: 'B',
+      },
+      {
+        start: 7,
+        duration: 25,
+        id: 7,
+        dependencies: [3],
+        name: 'C',
+      },
+      {
+        start: 7,
+        duration: 25,
+        id: 9,
+        dependencies: [1, 7],
+        name: 'D',
+      },
+      {
+        start: 17,
+        duration: 25,
+        id: 17,
+        dependencies: [],
+        name: 'E',
+      },
+      {
+        start: 17,
+        duration: 25,
+        id: 19,
+        dependencies: [17],
+        name: 'F',
+      },
+      {
+        start: 17,
+        duration: 25,
+        id: 20,
+        dependencies: [7, 3, 17],
+        name: 'G',
+      },
+      {
+        start: 33,
+        duration: 4,
+        id: 21,
+        dependencies: [20, 1, 19],
+        name: 'H',
+      }],
+    };
+    const chart = mount(<GanttChart data={mockData} />);
+    const bars = chart.find('GanttBar');
+
+    const barId1 = bars.findWhere(bar => bar.key() === '1').childAt(0);
+    const barId9 = bars.findWhere(bar => bar.key() === '9').childAt(0);
+    const barId17 = bars.findWhere(bar => bar.key() === '17').childAt(0);
+    const barId19 = bars.findWhere(bar => bar.key() === '19').childAt(0);
+    const barId21 = bars.findWhere(bar => bar.key() === '21').childAt(0);
+
+    expect(barId1.props().style.background).toEqual(
+      `repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) ${config.stripeLength}px)`,
+    );
+
+    expect(barId9.props().style.background).toEqual(
+      `repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) ${config.stripeLength}px)`,
+    );
+
+    expect(barId17.props().style.background).toEqual(
+      `repeating-linear-gradient(45deg, rgb(0,255,0) 0px, rgb(0,255,0) ${config.stripeLength}px)`,
+    );
+
+    expect(barId19.props().style.background).toEqual(
+      `repeating-linear-gradient(45deg, rgb(0,255,0) 0px, rgb(0,255,0) ${config.stripeLength}px)`,
+    );
+
+    expect(barId21.props().style.background).toEqual(
+      `repeating-linear-gradient(45deg, rgb(255,0,0) 0px, rgb(255,0,0) ${config.stripeLength}px, `
+      + `rgb(0,255,0) ${config.stripeLength}px, rgb(0,255,0) ${2 * config.stripeLength}px)`,
+    );
   });
 });
 

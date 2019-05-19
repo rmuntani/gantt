@@ -2,7 +2,9 @@ export const config = {
   barHeight: 20,
   barMargin: 3,
   chartWidth: 500,
+  defaultColor: 'blue',
   nameWidth: 100,
+  stripeLength: 4,
 };
 
 export const messages = {

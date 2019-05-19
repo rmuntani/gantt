@@ -27,7 +27,7 @@ function orderById(nodes) {
   return nodes.sort((a, b) => a.id - b.id);
 }
 
-export function findIndexWithId(id, sortedNodes) {
+export function findIndexUsingId(id, sortedNodes) {
   let midIndex = Math.floor(sortedNodes.length / 2);
   let min = { id: sortedNodes[0].id, index: 0 };
   let mid = {
@@ -90,7 +90,7 @@ function relateNodes(nodes) {
   const values = nodes.map(node => ({ id: node.getId() }));
   nodes.forEach((child) => {
     child.getDependencies().forEach((dependencyId) => {
-      const parent = nodes[findIndexWithId(dependencyId, values)];
+      const parent = nodes[findIndexUsingId(dependencyId, values)];
       connectChildAndParent(child, parent);
     });
   });
@@ -244,21 +244,19 @@ export function propagateColor(graph) {
 
   for (let i = 0; i < coloredGraph.length; i += 1) {
     const color = generateColor();
-    let children = coloredGraph[i].children;
+    let { children } = coloredGraph[i];
     coloredGraph[i].node.color = [color];
 
-    while ( children.length != 0 ) {
+    while (children.length !== 0) {
       const newChildren = [];
-      console.log(children);
-      for(let j = 0; j < children.length; j += 1) {
-        if ( children[j].node.color === undefined ) children[j].node.color = [color];
-        else if ( children[j].node.color.indexOf(color) < 0 ) children[j].node.color.push(color);
+      for (let j = 0; j < children.length; j += 1) {
+        if (children[j].node.color === undefined) children[j].node.color = [color];
+        else if (children[j].node.color.indexOf(color) < 0) children[j].node.color.push(color);
 
-        if (children[j] !== null) newChildren.push(children[j].children);
+        if (children[j].children.length > 0) newChildren.push(children[j].children);
       }
 
       children = [].concat(...newChildren);
-      console.log(children);
     }
   }
 

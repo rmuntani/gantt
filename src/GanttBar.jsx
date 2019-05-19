@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { config } from './gantt.config';
+import { generateStripedBar } from './helpers';
 
 class GanttBar extends Component {
   constructor(props) {
     super(props);
-    this.duration = props.duration;
+    this.color = props.bar.color;
+    this.duration = props.bar.duration;
     this.externalStyle = props.style;
-    this.id = props.id;
+    this.id = props.bar.id;
     this.mouseOver = this.mouseOver.bind(this);
     this.mouseLeave = this.mouseLeave.bind(this);
     this.myRef = React.createRef();
     this.onDoubleClick = props.onDoubleClick;
     this.scale = props.scale;
-    this.start = props.start;
+    this.start = props.bar.start;
     this.state = {
       showDetails: false,
     };
@@ -32,8 +34,14 @@ class GanttBar extends Component {
   }
 
   getStyle() {
+    let background;
+    if (this.color !== undefined) {
+      background = generateStripedBar(this.color, config.stripeLength);
+    } else {
+      background = config.defaultColor;
+    }
     const baseStyle = {
-      backgroundColor: '#2a56c6',
+      background,
       marginLeft: this.getMarginLeft(),
       width: this.getWidth(),
     };
@@ -100,16 +108,19 @@ class GanttBar extends Component {
 }
 
 GanttBar.propTypes = {
-  duration: PropTypes.number.isRequired,
-  id: PropTypes.number,
+  bar: PropTypes.shape({
+    color: PropTypes.arrayOf(PropTypes.string),
+    duration: PropTypes.number.isRequired,
+    id: PropTypes.number,
+    start: PropTypes.number.isRequired,
+  }),
   onDoubleClick: PropTypes.func,
   scale: PropTypes.number.isRequired,
-  start: PropTypes.number.isRequired,
   style: PropTypes.object,
 };
 
 GanttBar.defaultProps = {
-  id: null,
+  bar: { },
   onDoubleClick: null,
   style: { },
 };
