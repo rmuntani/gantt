@@ -21,6 +21,10 @@ class DependencyGraph {
     const { id } = this.node;
     return id;
   }
+
+  setStart(value) {
+    this.node.start = value;
+  }
 }
 
 function orderById(nodes) {
@@ -269,4 +273,27 @@ export function propagateAttributeToAll(graph, attribute) {
   const propagatedGraph = buildGraph(propagatedValues);
 
   return propagatedGraph;
+}
+
+export function propagateStart(graph) {
+  let currParents = graph;
+  for (let i = 0; i < graph.length; i += 1) {
+    graph[i].setStart(0);
+  }
+
+  while (currParents.length !== 0) {
+    for (let i = 0; i < currParents.length; i += 1) {
+      const currStart = currParents[i].node.start + currParents[i].node.duration;
+      currParents[i].children.forEach(
+        (currChild) => {
+          if (currChild.node.start === undefined || currChild.node.start < currStart) {
+            currChild.setStart(currStart);
+          }
+        },
+      );
+    }
+
+    const newParents = [].concat(...currParents.map(parent => parent.children));
+    currParents = newParents;
+  }
 }

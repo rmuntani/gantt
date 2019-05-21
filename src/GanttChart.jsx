@@ -12,6 +12,7 @@ class GanttChart extends Component {
     super(props);
     this.scale = props.data.scale;
     this.numTicks = props.data.numTicks;
+    this.originalBars = props.data.bars;
     this.originalGraph = DG.buildGraph(props.data.bars);
     if (DG.validateGraph(this.originalGraph).length === 0) {
       this.originalGraph = DG.propagateColor(this.originalGraph);
@@ -23,6 +24,22 @@ class GanttChart extends Component {
     };
     this.errors = [];
     this.showRelatives = this.showRelatives.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.data.bars !== this.originalBars) {
+      this.scale = nextProps.data.scale;
+      this.originalBars = nextProps.data.bars;
+      this.originalGraph = DG.buildGraph(this.originalBars);
+
+      if (DG.validateGraph(this.originalGraph).length === 0) {
+        this.originalGraph = DG.propagateColor(this.originalGraph);
+      }
+
+      this.setState(() => ({ graph: this.originalGraph }));
+      this.isDataValid();
+    }
+    return true;
   }
 
   getBars() {
@@ -127,6 +144,11 @@ class GanttChart extends Component {
     return validQuantity;
   }
 
+  areBarsEmpty() {
+    const { graph } = this.state;
+    if (graph.length === 0) this.errors.push(messages.emptyBars);
+  }
+
   isDataValid() {
     const { graph } = this.state;
     const graphValidationErrors = DG.validateGraph(graph);
@@ -213,6 +235,7 @@ class GanttChart extends Component {
     if (this.isDataValid()) {
       return this.renderChart();
     }
+
     return this.renderError();
   }
 }

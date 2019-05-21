@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "build-dev": "webpack --mode development",
     "lint": "./node_modules/.bin/eslint ",
     "test": "jest -- -t"
   },

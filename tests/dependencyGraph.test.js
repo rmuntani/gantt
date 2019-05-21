@@ -320,6 +320,12 @@ describe('.flattenGraph', () => {
     expect(dependencyGraph.flattenGraph(graph).sort(orderById))
       .toEqual(values.sort(orderById));
   });
+
+  it('should flatten an empty graph', () => {
+    const graph = [];
+
+    expect(dependencyGraph.flattenGraph(graph)).toEqual([]);
+  })
 });
 
 describe('.validateDependencies', () => {
@@ -623,5 +629,161 @@ describe('.propagateColor', () => {
       { id: 30, dependencies: [25, 21], color: [...firstColor, ...secondColor, ...thirdColor] }];
 
     expect(coloredValues).toEqual(expectedValues);
+  });
+});
+
+describe('.propagateStart', () => {
+  it('should propagate start time in a graph with roots only', () => {
+    const nodes = [{ id: 1, dependencies: [], duration: 5 },
+      { id: 3, dependencies: [], duration: 20 },
+      { id: 8, dependencies: [], duration: 25 }];
+    const graph = dependencyGraph.buildGraph(nodes);
+    const expectedValues = [{
+      id: 1, dependencies: [], duration: 5, start: 0,
+    },
+    {
+      id: 3, dependencies: [], duration: 20, start: 0,
+    },
+    {
+      id: 8, dependencies: [], duration: 25, start: 0,
+    }];
+
+    dependencyGraph.propagateStart(graph);
+    const nodesWithStart = dependencyGraph.flattenGraph(graph);
+
+    expect(nodesWithStart).toEqual(expectedValues);
+  });
+
+  it('should propagate start time in a graph with simple relationships', () => {
+    const nodes = [{ id: 1, dependencies: [], duration: 5 },
+      { id: 3, dependencies: [1], duration: 20 },
+      { id: 8, dependencies: [3], duration: 25 }];
+    const graph = dependencyGraph.buildGraph(nodes);
+    const expectedValues = [{
+      id: 1, dependencies: [], duration: 5, start: 0,
+    },
+    {
+      id: 3, dependencies: [1], duration: 20, start: 5,
+    },
+    {
+      id: 8, dependencies: [3], duration: 25, start: 25,
+    }];
+
+    dependencyGraph.propagateStart(graph);
+    const nodesWithStart = dependencyGraph.flattenGraph(graph);
+
+    expect(nodesWithStart).toEqual(expectedValues);
+  });
+
+  it('should propagate start time in multiple graphs with simple relationships', () => {
+    const nodes = [{ id: 1, dependencies: [], duration: 5 },
+      { id: 3, dependencies: [1], duration: 20 },
+      { id: 8, dependencies: [3], duration: 25 },
+      { id: 4, dependencies: [], duration: 7 },
+      { id: 6, dependencies: [4], duration: 4 }];
+    const graph = dependencyGraph.buildGraph(nodes);
+    const expectedValues = [{
+      id: 1, dependencies: [], duration: 5, start: 0,
+    },
+    {
+      id: 3, dependencies: [1], duration: 20, start: 5,
+    },
+    {
+      id: 4, dependencies: [], duration: 7, start: 0,
+    },
+    {
+      id: 6, dependencies: [4], duration: 4, start: 7,
+    },
+    {
+      id: 8, dependencies: [3], duration: 25, start: 25,
+    }];
+
+    dependencyGraph.propagateStart(graph);
+    const nodesWithStart = dependencyGraph.flattenGraph(graph);
+
+    expect(nodesWithStart).toEqual(expectedValues);
+  });
+
+  it('should propagate start time in a graph with complex relationships', () => {
+    const nodes = [{ id: 1, dependencies: [], duration: 5 },
+      { id: 2, dependencies: [1], duration: 12 },
+      { id: 3, dependencies: [1], duration: 3 },
+      { id: 4, dependencies: [2, 3], duration: 4 },
+      { id: 7, dependencies: [2], duration: 25 },
+      { id: 9, dependencies: [1, 7], duration: 17 }];
+    const graph = dependencyGraph.buildGraph(nodes);
+    const expectedValues = [{
+      id: 1, dependencies: [], duration: 5, start: 0,
+    },
+    {
+      id: 2, dependencies: [1], duration: 12, start: 5,
+    },
+    {
+      id: 3, dependencies: [1], duration: 3, start: 5,
+    },
+    {
+      id: 4, dependencies: [2, 3], duration: 4, start: 17,
+    },
+    {
+      id: 7, dependencies: [2], duration: 25, start: 17,
+    },
+    {
+      id: 9, dependencies: [1, 7], duration: 17, start: 42,
+    }];
+
+    dependencyGraph.propagateStart(graph);
+    const nodesWithStart = dependencyGraph.flattenGraph(graph);
+
+    expect(nodesWithStart).toEqual(expectedValues);
+  });
+
+  it('should propagate start time in a graph with multiple roots and complex relationships', () => {
+    const nodes = [{ id: 1, dependencies: [], duration: 8 },
+      { id: 2, dependencies: [1], duration: 3 },
+      { id: 3, dependencies: [1], duration: 15 },
+      { id: 4, dependencies: [3, 2], duration: 6 },
+      { id: 7, dependencies: [2], duration: 25 },
+      { id: 9, dependencies: [1, 7], duration: 7 },
+      { id: 17, dependencies: [], duration: 20 },
+      { id: 19, dependencies: [17], duration: 4 },
+      { id: 20, dependencies: [7, 3], duration: 10 },
+      { id: 21, dependencies: [20, 1, 19], duration: 1 }];
+    const graph = dependencyGraph.buildGraph(nodes);
+    const expectedValues = [{
+      id: 1, dependencies: [], duration: 8, start: 0,
+    },
+    {
+      id: 2, dependencies: [1], duration: 3, start: 8,
+    },
+    {
+      id: 3, dependencies: [1], duration: 15, start: 8,
+    },
+    {
+      id: 4, dependencies: [3, 2], duration: 6, start: 23,
+    },
+    {
+      id: 7, dependencies: [2], duration: 25, start: 11,
+    },
+    {
+      id: 9, dependencies: [1, 7], duration: 7, start: 36,
+    },
+    {
+      id: 17, dependencies: [], duration: 20, start: 0,
+    },
+    {
+      id: 19, dependencies: [17], duration: 4, start: 20,
+    },
+    {
+      id: 20, dependencies: [7, 3], duration: 10, start: 36,
+    },
+    {
+      id: 21, dependencies: [20, 1, 19], duration: 1, start: 46,
+    }];
+
+
+    dependencyGraph.propagateStart(graph);
+    const nodesWithStart = dependencyGraph.flattenGraph(graph);
+
+    expect(nodesWithStart).toEqual(expectedValues);
   });
 });

@@ -6,6 +6,7 @@ import { generateStripedBar } from './helpers';
 class GanttBar extends Component {
   constructor(props) {
     super(props);
+    console.log(props.bar);
     this.color = props.bar.color;
     this.duration = props.bar.duration;
     this.externalStyle = props.style;
@@ -24,6 +25,22 @@ class GanttBar extends Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.style !== this.externalStyle) {
       this.externalStyle = nextProps.style;
+    }
+
+    if (nextProps.color !== this.color) {
+      this.color = nextProps.bar.color;
+    }
+
+    if (nextProps.scale !== this.scale) {
+      this.scale = nextProps.scale;
+    }
+
+    if (nextProps.bar.start !== this.start) {
+      this.start = nextProps.bar.start;
+    }
+
+    if (nextProps.bar.duration !== this.duration) {
+      this.duration = nextProps.bar.duration;
     }
 
     return true;
@@ -91,7 +108,10 @@ class GanttBar extends Component {
 
   render() {
     const barId = this.id;
-
+    console.log(this.start);
+    console.log(this.duration);
+    console.log(this.scale);
+    console.log(this.getStyle());
     return (
       <div
         className="bar"

@@ -12,6 +12,7 @@ export const messages = {
   circularDependency: 'Graph has circular dependency',
   duration: 'duration',
   emptyRoot: 'Root is empty (a node without dependencies is probably missing)',
+  emptyBars: 'Bar data is empty',
   numericId: 'id must be a number/string',
   numTicks: 'Number of ticks',
   required: 'is necessary to draw the chart',
