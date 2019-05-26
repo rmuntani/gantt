@@ -18,7 +18,9 @@ export function parseTask(text) {
     (entry, index) => ({ name: entry[0], id: (index + 1) }),
   );
   const duration = splitEntry.map(entry => parseInt(entry[1], 0));
-  const dependenciesNames = splitEntry.map(entry => entry.splice(2).map(dependency => dependency.trim()));
+  const dependenciesNames = splitEntry.map(
+    entry => entry.splice(2).map(dependency => dependency.trim()),
+  );
   const dependenciesIds = dependenciesNames.map(
     dependencies => dependencies.map(dependency => findEquivalentId(dependency, names)),
   );

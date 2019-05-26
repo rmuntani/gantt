@@ -144,11 +144,6 @@ class GanttChart extends Component {
     return validQuantity;
   }
 
-  areBarsEmpty() {
-    const { graph } = this.state;
-    if (graph.length === 0) this.errors.push(messages.emptyBars);
-  }
-
   isDataValid() {
     const { graph } = this.state;
     const graphValidationErrors = DG.validateGraph(graph);

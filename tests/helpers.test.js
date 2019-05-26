@@ -63,4 +63,20 @@ describe('generateStripedBar', () => {
     expect(helpers.generateStripedBar(twoColors, size)).toEqual(doubleStriped);
     expect(helpers.generateStripedBar(threeColors, size)).toEqual(tripleStriped);
   });
+
+  describe('areArraysEqual', () => {
+    const sorted6 = [1, 2, 3, 4, 5, 6];
+    const sorted3 = [1, 2, 3];
+    const unsorted6 = [2, 3, 4, 5, 1, 6];
+    const unsorted3 = [3, 2, 1];
+    const different6 = [1, 6, 3, 7, 1, 1];
+
+    expect(helpers.areArraysEqual(sorted6, sorted3)).toEqual(false);
+    expect(helpers.areArraysEqual(sorted6, unsorted3)).toEqual(false);
+    expect(helpers.areArraysEqual(unsorted6, sorted3)).toEqual(false);
+    expect(helpers.areArraysEqual(unsorted6, unsorted3)).toEqual(false);
+    expect(helpers.areArraysEqual(sorted6, unsorted6)).toEqual(true);
+    expect(helpers.areArraysEqual(sorted3, unsorted3)).toEqual(true);
+    expect(helpers.areArraysEqual(different6, unsorted6)).toEqual(false);
+  });
 });

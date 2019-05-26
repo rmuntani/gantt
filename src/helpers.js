@@ -27,3 +27,16 @@ export function generateStripedBar(color, size) {
 
   return stripedBar;
 }
+
+export function areArraysEqual(arr1, arr2) {
+  const sortedArr1 = arr1.sort();
+  const sortedArr2 = arr2.sort();
+
+  if (sortedArr1.length !== sortedArr2.length) return false;
+
+  for (let i = 0; i < sortedArr1.length; i += 1) {
+    if (sortedArr1[i] !== sortedArr2[i]) return false;
+  }
+
+  return true;
+}

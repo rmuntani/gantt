@@ -325,7 +325,7 @@ describe('.flattenGraph', () => {
     const graph = [];
 
     expect(dependencyGraph.flattenGraph(graph)).toEqual([]);
-  })
+  });
 });
 
 describe('.validateDependencies', () => {

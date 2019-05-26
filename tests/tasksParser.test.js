@@ -87,7 +87,7 @@ describe('parseTask', () => {
     },
     {
       id: 2, start: 5, duration: 17, dependencies: [1], name: 'Bath the dog',
-    },];
+    }];
 
     expect(expectedParse).toEqual(taskParser.parseTask(noSpaces));
     expect(expectedParse).toEqual(taskParser.parseTask(withSpaces));

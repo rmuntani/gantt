@@ -10,6 +10,13 @@ class GanttXAxis extends Component {
     this.numTicks = props.numTicks;
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.scale !== this.scale) {
+      this.scale = nextProps.scale;
+    }
+    return true;
+  }
+
   getMarginLeft(i) {
     return (i > 0) ? `${1 / this.numTicks * 100}%` : '0%';
   }
