@@ -92,4 +92,81 @@ describe('parseTask', () => {
     expect(expectedParse).toEqual(taskParser.parseTask(noSpaces));
     expect(expectedParse).toEqual(taskParser.parseTask(withSpaces));
   });
+
+  it('parses texts and ignores empty lines', () => {
+    const emptyLines = `Adopt a dog,5
+                        Bath the dog,17,Adopt a dog
+
+
+                        \n\n\n`;
+    const expectedParse = [{
+      id: 1, start: 0, duration: 5, dependencies: [], name: 'Adopt a dog',
+    },
+    {
+      id: 2, start: 5, duration: 17, dependencies: [1], name: 'Bath the dog',
+    }];
+
+    expect(expectedParse).toEqual(taskParser.parseTask(emptyLines));
+  });
+});
+
+describe('validateText', () => {
+  it('validates an empty entry', () => {
+    const empty = '';
+    const newLine = '\n\n\n\n';
+
+    expect(taskParser.validateText(empty)).toEqual(['Empty text']);
+    expect(taskParser.validateText(newLine)).toEqual(['Empty text']);
+  });
+
+  it('validates text without name', () => {
+    const withDuration = ',5\nSleep,3';
+    const withMultipleWrongLines = ',5\nEat,3\n,4\nSleep,7,Eat';
+
+    expect(taskParser.validateText(withDuration)).toEqual(['Task name at line 1 is empty']);
+    expect(taskParser.validateText(withMultipleWrongLines)).toEqual([
+      'Task name at line 1 is empty',
+      'Task name at line 3 is empty',
+    ]);
+  });
+
+  it('validates text without duration', () => {
+    const withName = 'Sleep,4\nDie,';
+    const noCommas = 'Sleep';
+    const withMultipleWrongLines = 'Sleep,3\nDie,\nEat,10\nRun,,Eat';
+
+    expect(taskParser.validateText(withName)).toEqual(['Task duration at line 2 is empty']);
+    expect(taskParser.validateText(noCommas)).toEqual(['Task duration at line 1 is empty']);
+    expect(taskParser.validateText(withMultipleWrongLines)).toEqual([
+      'Task duration at line 2 is empty',
+      'Task duration at line 4 is empty',
+    ]);
+  });
+
+  it('validates text with non-numeric duration', () => {
+    const nonNumericDuration = 'Sleep, Live\nDie, 7';
+    const withMultipleWrongLines = 'Sleep, Live\nDie, Repeat\nSnore, 7, Sleep';
+
+    expect(taskParser.validateText(nonNumericDuration)).toEqual(
+      ['Task duration at line 1 is not a number'],
+    );
+    expect(taskParser.validateText(withMultipleWrongLines)).toEqual([
+      'Task duration at line 1 is not a number',
+      'Task duration at line 2 is not a number',
+    ]);
+  });
+
+  it('validates multiple mistakes', () => {
+    const multipleErrors = `Sleep,
+                            Eat, 5
+                            Wake up, 9, Sleep
+                            ,7
+                            Sing`;
+
+    expect(taskParser.validateText(multipleErrors)).toEqual([
+      'Task duration at line 1 is empty',
+      'Task name at line 4 is empty',
+      'Task duration at line 5 is empty',
+    ]);
+  });
 });

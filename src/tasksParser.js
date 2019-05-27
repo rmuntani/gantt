@@ -1,4 +1,10 @@
 import * as dependencyGraph from './dependencyGraph';
+import * as helpers from './helpers';
+import { messages } from './gantt.config';
+
+const NAMES = 0;
+const DURATION = 1;
+const DEPENDENCIES = 2;
 
 function findEquivalentId(name, namesList) {
   for (let i = 0; i < namesList.length; i += 1) {
@@ -11,15 +17,15 @@ function findEquivalentId(name, namesList) {
 export function parseTask(text) {
   if (text === '') return [];
 
-  const splitByLine = text.split('\n').map(split => split.trim());
+  const splitByLine = text.split('\n').map(split => split.trim()).filter(line => line !== '');
   const splitEntry = splitByLine.map(line => line.split(',').map(split => split.trim()));
 
   const names = splitEntry.map(
-    (entry, index) => ({ name: entry[0], id: (index + 1) }),
+    (entry, index) => ({ name: entry[NAMES], id: (index + 1) }),
   );
-  const duration = splitEntry.map(entry => parseInt(entry[1], 0));
+  const duration = splitEntry.map(entry => parseInt(entry[DURATION], 0));
   const dependenciesNames = splitEntry.map(
-    entry => entry.splice(2).map(dependency => dependency.trim()),
+    entry => entry.splice(DEPENDENCIES).map(dependency => dependency.trim()),
   );
   const dependenciesIds = dependenciesNames.map(
     dependencies => dependencies.map(dependency => findEquivalentId(dependency, names)),
@@ -42,4 +48,23 @@ export function parseTask(text) {
   const calculatedTasks = dependencyGraph.flattenGraph(graph);
 
   return calculatedTasks;
+}
+
+export function validateText(text) {
+  if (text === '' || text.split('\n').join('') === '') return [messages.emptyText];
+
+  const errors = [];
+  const splitByLine = text.split('\n').map(split => split.trim());
+  const splitEntry = splitByLine.map(line => line.split(',').map(split => split.trim()));
+
+  splitEntry.forEach((line, index) => {
+    if (line[NAMES] === '') errors.push(messages.taskNameEmpty(index + 1));
+    if (line[DURATION] === '' || line[DURATION] === undefined) {
+      errors.push(messages.taskDurationEmpty(index + 1));
+    } else if (!helpers.isNumeric(parseFloat(line[DURATION]))) {
+      errors.push(messages.taskDurationNonNumeric(index + 1));
+    }
+  });
+
+  return errors;
 }
