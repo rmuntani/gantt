@@ -8,15 +8,20 @@ import * as DG from './dependencyGraph.js';
 import { config, messages } from './gantt.config';
 
 class GanttChart extends Component {
-  constructor(props) {
-    super(props);
+  initialize(props) {
     this.scale = props.data.scale;
-    this.numTicks = props.data.numTicks;
     this.originalBars = props.data.bars;
-    this.originalGraph = DG.buildGraph(props.data.bars);
+    this.originalGraph = DG.buildGraph(this.originalBars);
+
     if (DG.validateGraph(this.originalGraph).length === 0) {
       this.originalGraph = DG.propagateColor(this.originalGraph);
     }
+  }
+
+  constructor(props) {
+    super(props);
+    this.numTicks = props.data.numTicks;
+    this.initialize(props);
     this.state = {
       graph: this.originalGraph,
       showFamily: false,
@@ -28,17 +33,11 @@ class GanttChart extends Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.data.bars !== this.originalBars) {
-      this.scale = nextProps.data.scale;
-      this.originalBars = nextProps.data.bars;
-      this.originalGraph = DG.buildGraph(this.originalBars);
-
-      if (DG.validateGraph(this.originalGraph).length === 0) {
-        this.originalGraph = DG.propagateColor(this.originalGraph);
-      }
-
+      this.initialize(nextProps);
       this.setState(() => ({ graph: this.originalGraph }));
       this.isDataValid();
     }
+
     return true;
   }
 
@@ -78,7 +77,10 @@ class GanttChart extends Component {
             ...node.attributes,
             ...{
               backgroundColor: 'white',
+              height: `${config.barHeight}px`,
               opacity: 0.9,
+              marginBottom: `${config.barMargin}px`,
+              marginTop: `${config.barMargin}px`,
               position: 'relative',
               width: 'max-content',
               zIndex: 1,
@@ -88,6 +90,9 @@ class GanttChart extends Component {
           style = {
             ...node.attributes,
             ...{
+              height: `${config.barHeight}px`,
+              marginBottom: `${config.barMargin}px`,
+              marginTop: `${config.barMargin}px`,
               overflow: 'hidden',
               width: `${config.nameWidth}px`,
             },
@@ -108,7 +113,7 @@ class GanttChart extends Component {
       },
     );
     return (
-      <div style={{ float: 'left', marginRigth: '5px' }}>{listItens}</div>
+      <div style={{ float: 'left', marginRigth: `${config.nameMargin}px` }}>{listItens}</div>
     );
   }
 
@@ -199,7 +204,7 @@ class GanttChart extends Component {
         <div style={{ marginLeft: `${config.nameWidth}px` }}>
           <div
             className="chart"
-            style={{ height: this.getChartHeight() }}
+            style={{ height: this.getChartHeight(), width: config.chartWidth }}
           >
             <GanttYAxis
               numTicks={this.numTicks}

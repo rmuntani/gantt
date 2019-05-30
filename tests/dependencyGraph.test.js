@@ -532,6 +532,8 @@ describe('.propagateAttributeToRelatives', () => {
 });
 
 describe('.propagateColor', () => {
+  const sortColors = data => data.forEach(value => value.color.sort());
+
   it('should propagate colors to the child nodes on a simple tree', () => {
     const values = [{ id: 1, dependencies: [] },
       { id: 2, dependencies: [1] },
@@ -563,6 +565,9 @@ describe('.propagateColor', () => {
       { id: 7, dependencies: [5], color: secondColor },
     ];
 
+    sortColors(coloredValues);
+    sortColors(expectedValues);
+
     expect(coloredValues).toEqual(expectedValues);
   });
 
@@ -588,8 +593,11 @@ describe('.propagateColor', () => {
       { id: 9, dependencies: [1, 7], color: firstColor },
       { id: 17, dependencies: [], color: secondColor },
       { id: 19, dependencies: [17], color: secondColor },
-      { id: 20, dependencies: [7, 3, 17], color: [...firstColor, ...secondColor] },
+      { id: 20, dependencies: [7, 3, 17], color: [...secondColor, ...firstColor] },
       { id: 21, dependencies: [20, 1, 19], color: [...firstColor, ...secondColor] }];
+
+    sortColors(coloredValues);
+    sortColors(expectedValues);
 
     expect(coloredValues).toEqual(expectedValues);
   });
@@ -621,12 +629,15 @@ describe('.propagateColor', () => {
       { id: 9, dependencies: [1, 7], color: firstColor },
       { id: 17, dependencies: [], color: secondColor },
       { id: 19, dependencies: [17], color: secondColor },
-      { id: 20, dependencies: [7, 3, 17], color: [...firstColor, ...secondColor] },
+      { id: 20, dependencies: [7, 3, 17], color: [...secondColor, ...firstColor] },
       { id: 21, dependencies: [20, 1, 19], color: [...firstColor, ...secondColor] },
       { id: 24, dependencies: [], color: thirdColor },
-      { id: 25, dependencies: [9, 24], color: [...firstColor, ...thirdColor] },
-      { id: 26, dependencies: [19, 24], color: [...secondColor, ...thirdColor] },
+      { id: 25, dependencies: [9, 24], color: [...thirdColor, ...firstColor] },
+      { id: 26, dependencies: [19, 24], color: [...thirdColor, ...secondColor] },
       { id: 30, dependencies: [25, 21], color: [...firstColor, ...secondColor, ...thirdColor] }];
+
+    sortColors(coloredValues);
+    sortColors(expectedValues);
 
     expect(coloredValues).toEqual(expectedValues);
   });

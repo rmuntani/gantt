@@ -3,7 +3,9 @@ export const config = {
   barMargin: 3,
   chartWidth: 500,
   defaultColor: 'blue',
+  nameMargin: 5,
   nameWidth: 100,
+  numTicks: 10,
   stripeLength: 4,
 };
 

@@ -6,44 +6,46 @@ import GanttChart from './GanttChart.jsx';
 export function GanttDrawer() {
   const [textArea, setText] = useState('');
   const [parseError, setParseError] = useState(validateText(''));
-  const data = useRef({ numTicks: 10, bars: [], scale: 0 });
+  const data = useRef({ numTicks: config.numTicks, bars: [], scale: 0 });
 
   const getMax = (graph => graph.reduce(
     (acc, curr) => {
-      if (curr.start + curr.duration > acc) return curr.start + curr.duration;
+      if (curr.start + curr.duration > acc) {
+        return curr.start + curr.duration;
+      }
+
       return acc;
     }, 0,
   ));
 
-  const handleChange = ((e) => {
-    const errors = validateText(e.target.value);
+  const handleChange = ((change) => {
+    const errors = validateText(change.target.value);
+
     if (errors.length === 0) {
-      const bars = parseTask(e.target.value);
+      const bars = parseTask(change.target.value);
       data.current = { numTicks: 10, bars, scale: getMax(bars) };
     }
-    setText(e.target.value);
+
+    setText(change.target.value);
     setParseError(errors);
   });
 
   const getWidth = (() => config.chartWidth + config.nameWidth);
 
-  if (parseError.length > 0) {
-    return (
-      <React.Fragment>
-        <div>
-          <textarea
-            value={textArea}
-            onChange={e => handleChange(e)}
-            style={{ width: getWidth() }}
-          />
-        </div>
-        <ul>
-Errors:
-          { parseError.map((error, index) => <li key={index}>{error}</li>) }
-        </ul>
-      </React.Fragment>
-    );
-  }
+  const renderErrors = (() => (
+    <ul>
+      Errors:
+      { parseError.map((error, index) => <li key={index}>{error}</li>) }
+    </ul>
+  ));
+
+  const renderChart = (() => <GanttChart data={data.current} />);
+
+  const renderParsedEntry = (() => {
+    if (parseError.length > 0) return renderErrors();
+
+    return renderChart();
+  });
 
   return (
     <React.Fragment>
@@ -54,7 +56,7 @@ Errors:
           style={{ width: getWidth() }}
         />
       </div>
-      <GanttChart data={data.current} />
+      { renderParsedEntry() }
     </React.Fragment>
   );
 }

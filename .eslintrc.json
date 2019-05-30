@@ -9,6 +9,7 @@
         "describe": "readonly",
         "expect": "readonly",
         "it": "readonly",
+        "jest": "readonly",
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {

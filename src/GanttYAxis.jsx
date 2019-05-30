@@ -11,10 +11,9 @@ class GanttYAxis extends Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.height !== this.height) {
       this.height = nextProps.height;
-      return true;
     }
 
-    return false;
+    return true;
   }
 
   getLeft(i) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { config } from './gantt.config';
-import { areArraysEqual, generateStripedBar } from './helpers';
+import { generateStripedBar } from './helpers';
 
 class GanttBar extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class GanttBar extends Component {
     this.externalStyle = props.style;
     this.mouseOver = this.mouseOver.bind(this);
     this.mouseLeave = this.mouseLeave.bind(this);
-    this.myRef = React.createRef();
+    this.componentReference = React.createRef();
     this.onDoubleClick = props.onDoubleClick;
     this.scale = props.scale;
     this.state = {
@@ -44,14 +44,19 @@ class GanttBar extends Component {
 
   getStyle() {
     let background;
+
     if (this.color !== undefined) {
       background = generateStripedBar(this.color, config.stripeLength);
     } else {
       background = config.defaultColor;
     }
+
     const baseStyle = {
       background,
+      height: config.barHeight,
+      marginBottom: config.barMargin,
       marginLeft: this.getMarginLeft(),
+      marginTop: config.barMargin,
       width: this.getWidth(),
     };
 
@@ -93,8 +98,8 @@ class GanttBar extends Component {
   }
 
   mouseOver() {
-    const x = this.myRef.current.offsetLeft;
-    const y = this.myRef.current.offsetTop;
+    const x = this.componentReference.current.offsetLeft;
+    const y = this.componentReference.current.offsetTop;
     this.setState(() => ({ showDetails: true, x, y }));
   }
 
@@ -111,7 +116,7 @@ class GanttBar extends Component {
         onMouseLeave={this.mouseLeave}
         onDoubleClick={() => this.onDoubleClick(barId)}
         style={this.getStyle()}
-        ref={this.myRef}
+        ref={this.componentReference}
       >
         {this.getDetails()}
       </div>

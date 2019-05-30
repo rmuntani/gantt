@@ -14,6 +14,7 @@ class GanttXAxis extends Component {
     if (nextProps.scale !== this.scale) {
       this.scale = nextProps.scale;
     }
+
     return true;
   }
 

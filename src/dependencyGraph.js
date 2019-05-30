@@ -8,6 +8,15 @@ class DependencyGraph {
     this.children = [];
   }
 
+  getColor() {
+    const { color } = this.node;
+    if (color !== undefined) {
+      return color;
+    }
+
+    return null;
+  }
+
   getDependencies() {
     const { dependencies } = this.node;
     if (dependencies !== undefined) {
@@ -22,8 +31,43 @@ class DependencyGraph {
     return id;
   }
 
+  getStart() {
+    const { start } = this.node;
+    if (start === undefined) {
+      return 0;
+    }
+
+    return start;
+  }
+
+  getDuration() {
+    const { duration } = this.node;
+    if (duration === undefined) {
+      return 0;
+    }
+
+    return duration;
+  }
+
+  hasParents() {
+    if (this.parents.length === 0) return false;
+
+    return true;
+  }
+
   setStart(value) {
     this.node.start = value;
+  }
+
+  setColor(newColors) {
+    const { color } = this.node;
+    if (color === undefined) {
+      this.node.color = [].concat(...newColors);
+    } else {
+      newColors.forEach((newColor) => {
+        if (color.indexOf(newColor) < 0) color.push(newColor);
+      });
+    }
   }
 }
 
@@ -32,6 +76,7 @@ function orderById(nodes) {
 }
 
 export function findIndexUsingId(id, sortedNodes) {
+  const getMidValue = (max, min) => Math.floor((max + min) / 2);
   let midIndex = Math.floor(sortedNodes.length / 2);
   let min = { id: sortedNodes[0].id, index: 0 };
   let mid = {
@@ -46,14 +91,14 @@ export function findIndexUsingId(id, sortedNodes) {
   do {
     if (id < mid.id && id > min.id) {
       max = mid;
-      midIndex = Math.floor((max.index + min.index) / 2);
+      midIndex = getMidValue(max.index, min.index);
       mid = {
         id: sortedNodes[midIndex].id,
         index: midIndex,
       };
     } else if (id > mid.id && id < max.id) {
       min = mid;
-      midIndex = Math.floor((max.index + min.index) / 2);
+      midIndex = getMidValue(max.index, min.index);
       mid = {
         id: sortedNodes[midIndex].id,
         index: midIndex,
@@ -74,6 +119,7 @@ export function findNode(id, graphs) {
   while (inpectedGroup.length > 0) {
     const foundNode = inpectedGroup.find(node => node.getId() === id);
     if (foundNode !== undefined) return foundNode;
+
     const newInspectedNodes = inpectedGroup.map(node => node.children);
     inpectedGroup = [].concat(...newInspectedNodes);
   }
@@ -92,6 +138,7 @@ function connectChildAndParent(child, parent) {
 
 function relateNodes(nodes) {
   const values = nodes.map(node => ({ id: node.getId() }));
+
   nodes.forEach((child) => {
     child.getDependencies().forEach((dependencyId) => {
       const parent = nodes[findIndexUsingId(dependencyId, values)];
@@ -101,7 +148,7 @@ function relateNodes(nodes) {
 }
 
 function filterRoot(nodes) {
-  return nodes.filter(node => node.parents.length === 0);
+  return nodes.filter(node => !node.hasParents());
 }
 
 export function buildGraph(values) {
@@ -116,13 +163,13 @@ export function flattenGraph(roots) {
 
   while (newNodes.length !== 0) {
     const currChildren = [].concat(...newNodes.map(nodes => nodes.children));
-    const notFlattened = currChildren.filter(
+    const notFlattenedChildren = currChildren.filter(
       currNode => flattenedGraph.indexOf(currNode.node) < 0,
     );
-    const notDuplicated = notFlattened.filter(
-      (node, index) => notFlattened.indexOf(node, index + 1) < 0,
+    const notDuplicatedChildren = notFlattenedChildren.filter(
+      (node, index) => notFlattenedChildren.indexOf(node, index + 1) < 0,
     );
-    notDuplicated.forEach(newNode => flattenedGraph.push(newNode.node));
+    notDuplicatedChildren.forEach(newFlattened => flattenedGraph.push(newFlattened.node));
     newNodes = currChildren;
   }
   return orderById(flattenedGraph);
@@ -132,9 +179,9 @@ function duplicateGraph(graph) {
   return buildGraph(flattenGraph(graph));
 }
 
-function getIdsFrom(parentsOrChildren, graphNode) {
-  const allowedIds = [graphNode.getId()];
-  let verifiedNodes = [graphNode];
+function getIdsFrom(parentsOrChildren, node) {
+  const allowedIds = [node.getId()];
+  let verifiedNodes = [node];
 
   while (verifiedNodes.length > 0) {
     let currRelatives = [];
@@ -160,38 +207,43 @@ function getRelatedIds(node) {
 }
 
 function isNewRoot(rootsIds, node) {
-  return node.parents.length === 0
-        && rootsIds.indexOf(node.getId()) < 0;
+  return !node.hasParents() && rootsIds.indexOf(node.getId()) < 0;
 }
 
 export function getRelatives(id, graph) {
   const duplicatedGraph = duplicateGraph(graph);
   const nodeWithId = findNode(id, duplicatedGraph);
   const allowedIds = getRelatedIds(nodeWithId);
-  const roots = (nodeWithId.parents.length === 0) ? [nodeWithId] : [];
-  let newParents = [nodeWithId];
+  const roots = (!nodeWithId.hasParents()) ? [nodeWithId] : [];
+  let analyzedParents = [nodeWithId];
 
-  while (newParents.length > 0) {
+  while (analyzedParents.length > 0) {
     const rootsIds = roots.map(root => root.getId());
-    let currParents = [];
-    newParents.forEach(newParent => currParents.push(newParent.parents));
-    currParents = [].concat(...currParents);
-    for (let i = 0; i < currParents.length; i += 1) {
-      currParents[i].children = currParents[i].children.filter(
+    let toBeAnalyzedParents = [];
+
+    analyzedParents.forEach(parent => toBeAnalyzedParents.push(parent.parents));
+    toBeAnalyzedParents = [].concat(...toBeAnalyzedParents);
+
+    for (let i = 0; i < toBeAnalyzedParents.length; i += 1) {
+      toBeAnalyzedParents[i].children = toBeAnalyzedParents[i].children.filter(
         child => allowedIds.indexOf(child.getId()) >= 0,
       );
     }
-    currParents.forEach((currParent) => {
-      if (isNewRoot(rootsIds, currParent)) roots.push(currParent);
+
+    toBeAnalyzedParents.forEach((parent) => {
+      if (isNewRoot(rootsIds, parent)) roots.push(parent);
     });
-    newParents = currParents.filter(currParent => rootsIds.indexOf(currParent.getId()) < 0);
+
+    analyzedParents = toBeAnalyzedParents.filter(
+      currParent => rootsIds.indexOf(currParent.getId()) < 0,
+    );
   }
   return roots;
 }
 
-function getNewIds(newIds, oldIds) {
-  return newIds.filter(
-    (id, index) => newIds.indexOf(id, index + 1) < 0 && oldIds.indexOf(id) < 0,
+function filterUniqueIds(testedIds, set) {
+  return testedIds.filter(
+    (id, index) => testedIds.indexOf(id, index + 1) < 0 && set.indexOf(id) < 0,
   );
 }
 
@@ -204,13 +256,13 @@ function validateNodesRelationship(graph) {
     let childNodes = currentNodes.map(node => node.children);
     childNodes = [].concat(...childNodes);
     const childrenIds = childNodes.map(node => node.getId());
-    const newIds = getNewIds(childrenIds, ids);
+    const newIds = filterUniqueIds(childrenIds, ids);
     ids = ids.concat(...newIds);
     currentNodes = childNodes;
     iterations += 1;
   }
 
-  if (iterations > ids.length) return { error: messages.circularDependency };
+  if (iterations > ids.length) return messages.circularDependency;
 
   return null;
 }
@@ -222,7 +274,7 @@ export function validateGraph(graph) {
     errors.push(messages.emptyRoot);
   } else {
     const relationshipErrors = validateNodesRelationship(graph);
-    if (relationshipErrors) errors.push(relationshipErrors.error);
+    if (relationshipErrors !== null) errors.push(relationshipErrors);
   }
 
   return errors;
@@ -230,41 +282,18 @@ export function validateGraph(graph) {
 
 export function propagateAttributeToRelatives(id, graph, attribute) {
   const nodeWithId = findNode(id, graph);
-  const allowedIds = getRelatedIds(nodeWithId);
+  const relativesIds = getRelatedIds(nodeWithId);
   const flattenedGraph = flattenGraph(graph);
+
   const propagatedValues = flattenedGraph.map((node) => {
-    if (allowedIds.indexOf(node.id) >= 0) {
+    if (relativesIds.indexOf(node.id) >= 0) {
       return { ...node, attributes: attribute };
     }
     return node;
   });
+
   const propagatedGraph = buildGraph(propagatedValues);
-
   return propagatedGraph;
-}
-
-export function propagateColor(graph) {
-  const coloredGraph = duplicateGraph(graph);
-
-  for (let i = 0; i < coloredGraph.length; i += 1) {
-    const color = generateColor();
-    let { children } = coloredGraph[i];
-    coloredGraph[i].node.color = [color];
-
-    while (children.length !== 0) {
-      const newChildren = [];
-      for (let j = 0; j < children.length; j += 1) {
-        if (children[j].node.color === undefined) children[j].node.color = [color];
-        else if (children[j].node.color.indexOf(color) < 0) children[j].node.color.push(color);
-
-        if (children[j].children.length > 0) newChildren.push(children[j].children);
-      }
-
-      children = [].concat(...newChildren);
-    }
-  }
-
-  return coloredGraph;
 }
 
 export function propagateAttributeToAll(graph, attribute) {
@@ -275,25 +304,40 @@ export function propagateAttributeToAll(graph, attribute) {
   return propagatedGraph;
 }
 
-export function propagateStart(graph) {
+function propagateToChildren(graph, propagateFunction) {
   let currParents = graph;
-  for (let i = 0; i < graph.length; i += 1) {
-    graph[i].setStart(0);
-  }
 
-  while (currParents.length !== 0) {
-    for (let i = 0; i < currParents.length; i += 1) {
-      const currStart = currParents[i].node.start + currParents[i].node.duration;
-      currParents[i].children.forEach(
-        (currChild) => {
-          if (currChild.node.start === undefined || currChild.node.start < currStart) {
-            currChild.setStart(currStart);
-          }
-        },
-      );
-    }
+  while (currParents.length > 0) {
+    currParents.forEach(
+      parent => parent.children.forEach(child => propagateFunction(parent, child)),
+    );
+    const nextParents = currParents.map(parent => parent.children);
 
-    const newParents = [].concat(...currParents.map(parent => parent.children));
-    currParents = newParents;
+    currParents = [].concat(...nextParents);
   }
+}
+
+function sendColorToChild(parent, child) {
+  child.setColor(parent.getColor());
+}
+
+export function propagateColor(graph) {
+  const coloredGraph = duplicateGraph(graph);
+
+  coloredGraph.forEach(node => node.setColor([generateColor()]));
+  propagateToChildren(graph, sendColorToChild);
+
+  return coloredGraph;
+}
+
+function calculateChildStart(parent, child) {
+  const parentEnding = parent.getStart() + parent.getDuration();
+  if (parentEnding > child.getStart()) child.setStart(parentEnding);
+}
+
+export function propagateStart(graph) {
+  const currParents = graph;
+  currParents.forEach(parent => parent.setStart(0));
+
+  propagateToChildren(graph, calculateChildStart);
 }
